@@ -53,13 +53,15 @@ func main() {
 
 	// Route => handler
 	e.GET("/", handler.Index)
-	e.POST("/login", handler.Login)
 	e.POST("/signup", handler.Signup)
+	e.POST("/login", handler.Login)
+	e.POST("/logout", handler.Logout)
 
 	// Configure middleware with the custom claims type
 	jwtConfig := middleware.JWTConfig{
 		Claims:     &jwt.CustomClaims{},
 		SigningKey: []byte(conf.JWT.Secret),
+		TokenLookup: "cookie:Authorization",
 	}
 
 	// Restricted group
