@@ -1,0 +1,10 @@
+server:
+    host: "localhost"
+    port: 8088
+  
+database:
+    user: "postgres"
+    pass: "root"
+
+jwt:
+    secret: "b5a636fc-bd01-41b1-9780-7bbd906fa4c0"
