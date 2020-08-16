@@ -30,7 +30,7 @@ func Signup(c echo.Context) error {
 	util.CookieStore{
 		Key:        "Authorization",
 		Value:      token,
-		ExpireTime: time.Hour * 60 * 100,
+		ExpireTime: time.Hour * 60 * 99,
 	}.Write(c)
 
 	return c.JSON(http.StatusOK, echo.Map{
@@ -43,7 +43,6 @@ func Login(c echo.Context) error {
 	secret := config.GetConfig(c).JWT.Secret
 	email := c.FormValue("email")
 	password := util.Password(c.FormValue("password"))
-
 	accounts := data.NewAccounts(c)
 	a, err := accounts.GetAccountByEmail(email)
 	if err != nil {
@@ -62,7 +61,7 @@ func Login(c echo.Context) error {
 	util.CookieStore{
 		Key:        "Authorization",
 		Value:      token,
-		ExpireTime: time.Hour * 60 * 100,
+		ExpireTime: time.Hour * 60 * 99,
 	}.Write(c)
 
 	return c.JSON(http.StatusOK, echo.Map{
@@ -77,8 +76,7 @@ func Logout(c echo.Context) error {
 
 // Verify handler
 func Verify(c echo.Context) error {
-	accountID := jwt.Verify(c)
 	return c.JSON(http.StatusOK, echo.Map{
-		"account_id": accountID,
+		"account_id": jwt.Verify(c),
 	})
 }

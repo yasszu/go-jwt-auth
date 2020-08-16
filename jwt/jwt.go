@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"github.com/labstack/echo/middleware"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -36,4 +37,13 @@ func Verify(c echo.Context) int64 {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*CustomClaims)
 	return claims.AccountID
+}
+
+// MiddlewareConfig Configure middleware with the custom claims type
+func MiddlewareConfig(secret string) middleware.JWTConfig {
+	return middleware.JWTConfig{
+		Claims:      &CustomClaims{},
+		SigningKey:  []byte(secret),
+		TokenLookup: "cookie:Authorization",
+	}
 }

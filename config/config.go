@@ -1,11 +1,9 @@
 package config
 
 import (
-	"log"
-	"os"
-
 	"github.com/labstack/echo"
 	"gopkg.in/yaml.v3"
+	"os"
 )
 
 // Config is conf.yml
@@ -24,21 +22,23 @@ type Config struct {
 	} `yaml:"jwt"`
 }
 
+func NewConfig() Config {
+	return Config{}
+}
+
 // LoadConfig load conf.yml
-func LoadConfig() Config {
+func (cfg Config) Load() (Config, error) {
 	f, err := os.Open("config/conf.yml")
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		return cfg, err
 	}
 	defer f.Close()
 
-	var cfg Config
 	decoder := yaml.NewDecoder(f)
-	err = decoder.Decode(&cfg)
-	if err != nil {
-		log.Fatalf("error: %v", err)
+	if err := decoder.Decode(&cfg); err != nil {
+		return cfg, err
 	}
-	return cfg
+	return cfg, nil
 }
 
 func GetConfig(c echo.Context) Config {

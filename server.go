@@ -14,9 +14,11 @@ import (
 )
 
 func main() {
-	conf := config.LoadConfig()
-	host := conf.Server.Host
-	port := conf.Server.Port
+	conf, err := config.NewConfig().Load()
+	if err != nil {
+		panic(err.Error())
+	}
+
 	pgUser := conf.Database.Username
 	pgPass := conf.Database.Password
 	pgDB := conf.Database.DB
@@ -56,25 +58,19 @@ func main() {
 	})
 
 	// Route => handler
+
+	// /..
 	e.GET("/", handler.Index)
 	e.POST("/signup", handler.Signup)
 	e.POST("/login", handler.Login)
 	e.POST("/logout", handler.Logout)
 
-	// Configure middleware with the custom claims type
-	jwtConfig := middleware.JWTConfig{
-		Claims:      &jwt.CustomClaims{},
-		SigningKey:  []byte(conf.JWT.Secret),
-		TokenLookup: "cookie:Authorization",
-	}
-
-	// Restricted group
-	v1 := e.Group("/v1")
-	v1.Use(middleware.JWTWithConfig(jwtConfig))
-
+	// /v1/..
+	v1 := e.Group("/v1") // Restricted group
+	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(conf.JWT.Secret)))
 	v1.GET("", handler.Index)
 	v1.GET("/verify", handler.Verify)
 
 	// Start server
-	e.Logger.Fatal(e.Start(host + ":" + port))
+	e.Logger.Fatal(e.Start(conf.Server.Host + ":" + conf.Server.Port))
 }
