@@ -19,12 +19,8 @@ func main() {
 		panic(err.Error())
 	}
 
-	pgUser := conf.Database.Username
-	pgPass := conf.Database.Password
-	pgDB := conf.Database.DB
-
-	// Init Database
-	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", pgUser, pgDB, pgPass)
+	// Init Postgres
+	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", conf.Postgres.Username, conf.Postgres.DB, conf.Postgres.DB)
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err.Error())

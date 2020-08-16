@@ -1,8 +1,8 @@
 server:
     host: "localhost"
     port: 8088
-  
-database:
+
+postgres:
     user: "postgres"
     password: "password"
     db: "postgres"
