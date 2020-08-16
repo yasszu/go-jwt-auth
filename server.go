@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -16,9 +17,12 @@ func main() {
 	conf := config.LoadConfig()
 	host := conf.Server.Host
 	port := conf.Server.Port
+	pgUser := conf.Database.Username
+	pgPass := conf.Database.Password
+	pgDB := conf.Database.DB
 
 	// Init Database
-	conn := "user=postgres dbname=postgres password=root sslmode=disable"
+	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", pgUser, pgDB, pgPass)
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err.Error())
@@ -59,8 +63,8 @@ func main() {
 
 	// Configure middleware with the custom claims type
 	jwtConfig := middleware.JWTConfig{
-		Claims:     &jwt.CustomClaims{},
-		SigningKey: []byte(conf.JWT.Secret),
+		Claims:      &jwt.CustomClaims{},
+		SigningKey:  []byte(conf.JWT.Secret),
 		TokenLookup: "cookie:Authorization",
 	}
 

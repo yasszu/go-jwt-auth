@@ -16,7 +16,8 @@ type Config struct {
 	} `yaml:"server"`
 	Database struct {
 		Username string `yaml:"user"`
-		Password string `yaml:"pass"`
+		Password string `yaml:"password"`
+		DB       string `yaml:"db"`
 	} `yaml:"database"`
 	JWT struct {
 		Secret string `yaml:"secret"`

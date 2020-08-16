@@ -4,7 +4,8 @@ server:
   
 database:
     user: "postgres"
-    pass: "root"
+    password: "password"
+    db: "postgres"
 
 jwt:
     secret: "b5a636fc-bd01-41b1-9780-7bbd906fa4c0"
