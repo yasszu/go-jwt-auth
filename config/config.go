@@ -16,7 +16,7 @@ type Config struct {
 		Username string `yaml:"user"`
 		Password string `yaml:"password"`
 		DB       string `yaml:"db"`
-	} `yaml:"database"`
+	} `yaml:"postgres"`
 	JWT struct {
 		Secret string `yaml:"secret"`
 	} `yaml:"jwt"`

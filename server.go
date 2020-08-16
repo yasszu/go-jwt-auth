@@ -20,7 +20,10 @@ func main() {
 	}
 
 	// Init Postgres
-	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", conf.Postgres.Username, conf.Postgres.DB, conf.Postgres.DB)
+	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable",
+		conf.Postgres.Username,
+		conf.Postgres.DB,
+		conf.Postgres.Password)
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err.Error())

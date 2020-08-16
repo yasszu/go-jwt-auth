@@ -1,14 +1,15 @@
 package handler
 
 import (
-	"go-jwt-auth/config"
-	"go-jwt-auth/data"
-	"go-jwt-auth/jwt"
-	"go-jwt-auth/util"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo"
+
+	"go-jwt-auth/config"
+	"go-jwt-auth/jwt"
+	"go-jwt-auth/repository"
+	"go-jwt-auth/util"
 )
 
 func Signup(c echo.Context) error {
@@ -16,8 +17,8 @@ func Signup(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-	accounts := data.NewAccounts(c)
-	id, err := accounts.CreateAccount(email, password)
+	accountRepository := repository.NewAccountRepository(c)
+	id, err := accountRepository.CreateAccount(email, password)
 	if err != nil {
 		return err
 	}
@@ -43,7 +44,7 @@ func Login(c echo.Context) error {
 	secret := config.GetConfig(c).JWT.Secret
 	email := c.FormValue("email")
 	password := util.Password(c.FormValue("password"))
-	accounts := data.NewAccounts(c)
+	accounts := repository.NewAccountRepository(c)
 	a, err := accounts.GetAccountByEmail(email)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
