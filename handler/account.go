@@ -14,14 +14,15 @@ import (
 
 type AccountHandler struct {
 	accountRepository repository.IAccountRepository
+	conf              config.Config
 }
 
-func NewAccountHandler(repository repository.IAccountRepository) *AccountHandler {
-	return &AccountHandler{accountRepository: repository}
+func NewAccountHandler(repository repository.IAccountRepository, conf config.Config) *AccountHandler {
+	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
 func (h AccountHandler) Signup(c echo.Context) error {
-	secret := config.GetConfig(c).JWT.Secret
+	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
@@ -48,7 +49,7 @@ func (h AccountHandler) Signup(c echo.Context) error {
 
 // Login handler
 func (h AccountHandler) Login(c echo.Context) error {
-	secret := config.GetConfig(c).JWT.Secret
+	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
 	password := util.Password(c.FormValue("password"))
 

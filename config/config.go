@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/labstack/echo"
 	"gopkg.in/yaml.v3"
 	"os"
 )
@@ -39,9 +38,4 @@ func (cfg Config) Load() (Config, error) {
 		return cfg, err
 	}
 	return cfg, nil
-}
-
-func GetConfig(c echo.Context) Config {
-	conf := c.Get("conf").(Config)
-	return conf
 }

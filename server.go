@@ -41,16 +41,8 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
-	// Use config
-	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			c.Set("conf", conf)
-			return next(c)
-		}
-	})
-
 	accountRepository := repository.NewAccountRepository(db)
-	accountHandler := handler.NewAccountHandler(accountRepository)
+	accountHandler := handler.NewAccountHandler(accountRepository, conf)
 
 	// Route => handler
 
