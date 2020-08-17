@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"go-jwt-auth/model"
 	"go-jwt-auth/util"
-
-	"github.com/labstack/echo"
 )
 
 type Account = model.Account
@@ -20,9 +18,8 @@ type AccountRepository struct {
 	DB *sql.DB
 }
 
-func NewAccountRepository(c echo.Context) IAccountRepository {
-	db := c.Get("db").(*sql.DB)
-	return &AccountRepository{DB: db}
+func NewAccountRepository(db *sql.DB) *AccountRepository {
+	return &AccountRepository{db}
 }
 
 func (a AccountRepository) GetAccountByEmail(email string) (Account, error) {

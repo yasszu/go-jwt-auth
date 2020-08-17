@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"go-jwt-auth/repository"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -48,27 +49,22 @@ func main() {
 		}
 	})
 
-	// Use DB
-	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			c.Set("db", db)
-			return next(c)
-		}
-	})
+	accountRepository := repository.NewAccountRepository(db)
+	accountHandler := handler.NewAccountHandler(accountRepository)
 
 	// Route => handler
 
 	// /..
 	e.GET("/", handler.Index)
-	e.POST("/signup", handler.Signup)
-	e.POST("/login", handler.Login)
-	e.POST("/logout", handler.Logout)
+	e.POST("/signup", accountHandler.Signup)
+	e.POST("/login", accountHandler.Login)
+	e.POST("/logout", accountHandler.Logout)
 
 	// /v1/..
 	v1 := e.Group("/v1") // Restricted group
 	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(conf.JWT.Secret)))
 	v1.GET("", handler.Index)
-	v1.GET("/verify", handler.Verify)
+	v1.GET("/verify", accountHandler.Verify)
 
 	// Start server
 	e.Logger.Fatal(e.Start(conf.Server.Host + ":" + conf.Server.Port))

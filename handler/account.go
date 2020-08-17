@@ -12,13 +12,20 @@ import (
 	"go-jwt-auth/util"
 )
 
-func Signup(c echo.Context) error {
+type AccountHandler struct {
+	accountRepository repository.IAccountRepository
+}
+
+func NewAccountHandler(repository repository.IAccountRepository) *AccountHandler {
+	return &AccountHandler{accountRepository: repository}
+}
+
+func (h AccountHandler) Signup(c echo.Context) error {
 	secret := config.GetConfig(c).JWT.Secret
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-	accountRepository := repository.NewAccountRepository(c)
-	id, err := accountRepository.CreateAccount(email, password)
+	id, err := h.accountRepository.CreateAccount(email, password)
 	if err != nil {
 		return err
 	}
@@ -40,12 +47,12 @@ func Signup(c echo.Context) error {
 }
 
 // Login handler
-func Login(c echo.Context) error {
+func (h AccountHandler) Login(c echo.Context) error {
 	secret := config.GetConfig(c).JWT.Secret
 	email := c.FormValue("email")
 	password := util.Password(c.FormValue("password"))
-	accounts := repository.NewAccountRepository(c)
-	a, err := accounts.GetAccountByEmail(email)
+
+	a, err := h.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
@@ -70,13 +77,13 @@ func Login(c echo.Context) error {
 	})
 }
 
-func Logout(c echo.Context) error {
+func (h AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
 // Verify handler
-func Verify(c echo.Context) error {
+func (h AccountHandler) Verify(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{
 		"account_id": jwt.Verify(c),
 	})
