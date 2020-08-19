@@ -3,8 +3,6 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/go-playground/validator/v10"
-
 	"go-jwt-auth/model"
 	"go-jwt-auth/util"
 )
@@ -23,8 +21,6 @@ type IAccountRepository interface {
 type AccountRepository struct {
 	DB *sql.DB
 }
-
-var validate *validator.Validate
 
 func NewAccountRepository(db *sql.DB) *AccountRepository {
 	return &AccountRepository{db}
