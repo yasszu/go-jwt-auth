@@ -8,6 +8,7 @@ import (
 
 	"go-jwt-auth/config"
 	"go-jwt-auth/jwt"
+	"go-jwt-auth/model"
 	"go-jwt-auth/repository"
 	"go-jwt-auth/util"
 )
@@ -23,10 +24,16 @@ func NewAccountHandler(repository repository.IAccountRepository, conf config.Con
 
 func (h AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
+	username := c.FormValue("username")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
+	from := model.AccountForm{Username: username, Email: email, Password: password}
 
-	id, err := h.accountRepository.CreateAccount(email, password)
+	if err := c.Validate(from); err != nil {
+		return err
+	}
+
+	id, err := h.accountRepository.CreateAccount(from)
 	if err != nil {
 		return err
 	}
@@ -36,11 +43,7 @@ func (h AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	util.CookieStore{
-		Key:        "Authorization",
-		Value:      token,
-		ExpireTime: time.Hour * 60 * 99,
-	}.Write(c)
+	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
 	return c.JSON(http.StatusOK, echo.Map{
 		"token": token,
@@ -67,11 +70,7 @@ func (h AccountHandler) Login(c echo.Context) error {
 		return err
 	}
 
-	util.CookieStore{
-		Key:        "Authorization",
-		Value:      token,
-		ExpireTime: time.Hour * 60 * 99,
-	}.Write(c)
+	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
 	return c.JSON(http.StatusOK, echo.Map{
 		"token": token,

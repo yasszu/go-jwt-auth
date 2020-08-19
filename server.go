@@ -3,11 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"go-jwt-auth/repository"
-
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	_ "github.com/lib/pq"
+	"go-jwt-auth/repository"
+	"go-jwt-auth/util"
 
 	"go-jwt-auth/config"
 	"go-jwt-auth/handler"
@@ -33,6 +33,7 @@ func main() {
 
 	// Echo instance
 	e := echo.New()
+	e.Validator = util.NewCustomValidator()
 
 	// Middleware
 	e.Use(middleware.Logger())
