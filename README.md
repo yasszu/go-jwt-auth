@@ -7,7 +7,7 @@
 
 1. Run server
     ```
-    $ go run server.go
+    $ go run main.go
     ```
 
 ## API
