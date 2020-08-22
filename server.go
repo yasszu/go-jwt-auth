@@ -43,7 +43,7 @@ func main() {
 	}))
 
 	accountRepository := repository.NewAccountRepository(db)
-	accountHandler := handler.NewAccountHandler(accountRepository, conf)
+	accountHandler := handler.NewAccountHandler(accountRepository, &conf)
 
 	// Route => handler
 

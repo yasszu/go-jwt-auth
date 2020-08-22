@@ -13,15 +13,23 @@ import (
 	"go-jwt-auth/util"
 )
 
-type AccountHandler struct {
-	accountRepository repository.IAccountRepository
-	conf              config.Config
+type IAccountHandler interface {
+	Signup(c echo.Context) error
+	Login(c echo.Context) error
+	Logout(c echo.Context) error
+	Verify(c echo.Context) error
 }
 
-func NewAccountHandler(repository repository.IAccountRepository, conf config.Config) *AccountHandler {
+type AccountHandler struct {
+	accountRepository repository.IAccountRepository
+	conf              *config.Config
+}
+
+func NewAccountHandler(repository repository.IAccountRepository, conf *config.Config) *AccountHandler {
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
+// Signup handler
 func (h AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	username := c.FormValue("username")
@@ -77,6 +85,7 @@ func (h AccountHandler) Login(c echo.Context) error {
 	})
 }
 
+// Logout handler
 func (h AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
