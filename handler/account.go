@@ -29,7 +29,7 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
-// Signup handler
+// Signup -> POST /signup
 func (h AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	username := c.FormValue("username")
@@ -58,7 +58,7 @@ func (h AccountHandler) Signup(c echo.Context) error {
 	})
 }
 
-// Login handler
+// Login -> POST /login
 func (h AccountHandler) Login(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
@@ -85,13 +85,13 @@ func (h AccountHandler) Login(c echo.Context) error {
 	})
 }
 
-// Logout handler
+// Logout -> Get /logout
 func (h AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
-// Verify handler
+// Verify -> Get /v1/verify
 func (h AccountHandler) Verify(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{
 		"account_id": jwt.Verify(c),

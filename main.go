@@ -56,7 +56,6 @@ func main() {
 	// /v1/..
 	v1 := e.Group("/v1") // Restricted group
 	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(conf.JWT.Secret)))
-	v1.GET("", handler.Index)
 	v1.GET("/verify", accountHandler.Verify)
 
 	// Start server
