@@ -29,36 +29,35 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
-// Signup handler
+// Signup -> POST /signup
 func (h AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	username := c.FormValue("username")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
-	from := model.AccountForm{Username: username, Email: email, Password: password}
 
+	from := model.AccountForm{Username: username, Email: email, Password: password}
 	if err := c.Validate(from); err != nil {
 		return err
 	}
 
-	id, err := h.accountRepository.CreateAccount(from)
+	account, err := h.accountRepository.CreateAccount(from)
 	if err != nil {
 		return err
 	}
 
-	token, err := jwt.Sign(email, id, secret)
+	token, err := jwt.Sign(email, account.AccountID, secret)
 	if err != nil {
 		return err
 	}
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-
 	return c.JSON(http.StatusOK, echo.Map{
 		"token": token,
 	})
 }
 
-// Login handler
+// Login -> POST /login
 func (h AccountHandler) Login(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
@@ -79,21 +78,29 @@ func (h AccountHandler) Login(c echo.Context) error {
 	}
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-
 	return c.JSON(http.StatusOK, echo.Map{
 		"token": token,
 	})
 }
 
-// Logout handler
+// Logout -> Get /logout
 func (h AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
-// Verify handler
-func (h AccountHandler) Verify(c echo.Context) error {
-	return c.JSON(http.StatusOK, echo.Map{
-		"account_id": jwt.Verify(c),
-	})
+// Me -> Get /v1/me
+func (h AccountHandler) Me(c echo.Context) error {
+	accountId := jwt.Verify(c)
+	account, err := h.accountRepository.GetAccountById(accountId)
+	if err != nil {
+		return err
+	}
+	response := &model.AccountResponse{
+		AccountID: account.AccountID,
+		Username:  account.Username,
+		Email:     account.Email,
+		CreatedOn: account.CreatedOn,
+	}
+	return c.JSON(http.StatusOK, response)
 }

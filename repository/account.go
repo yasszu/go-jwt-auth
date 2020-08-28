@@ -1,44 +1,50 @@
 package repository
 
 import (
-	"database/sql"
+	"github.com/jinzhu/gorm"
 
 	"go-jwt-auth/model"
 	"go-jwt-auth/util"
 )
 
 type IAccountRepository interface {
-	GetAccountByEmail(email string) (model.Account, error)
-	GetAccountById(id int64) (model.Account, error)
-	CreateAccount(form model.AccountForm) (int64, error)
+	GetAccountByEmail(email string) (*model.Account, error)
+	GetAccountById(id int64) (*model.Account, error)
+	CreateAccount(form model.AccountForm) (*model.Account, error)
 }
 
 type AccountRepository struct {
-	DB *sql.DB
+	db *gorm.DB
 }
 
-func NewAccountRepository(db *sql.DB) *AccountRepository {
+func NewAccountRepository(db *gorm.DB) *AccountRepository {
 	return &AccountRepository{db}
 }
 
-func (a AccountRepository) GetAccountByEmail(email string) (model.Account, error) {
+func (a AccountRepository) GetAccountByEmail(email string) (*model.Account, error) {
 	var account model.Account
-	row := a.DB.QueryRow(`SELECT account_id, email, password FROM Accounts WHERE email = $1`, email)
-	err := row.Scan(&account.AccountID, &account.Email, &account.Password)
-	return account, err
+	err := a.db.Where("email = ?", email).First(&account).Error
+	if err != nil {
+		return nil, err
+	}
+	return &account, err
 }
 
-func (a AccountRepository) GetAccountById(id int64) (model.Account, error) {
+func (a AccountRepository) GetAccountById(id int64) (*model.Account, error) {
 	var account model.Account
-	row := a.DB.QueryRow(`SELECT account_id, email, password FROM Accounts WHERE account_id = $1`, id)
-	err := row.Scan(&account.AccountID, &account.Email, &account.Password)
-	return account, err
+	err := a.db.Where("account_id = ?", id).First(&account).Error
+	if err != nil {
+		return nil, err
+	}
+	return &account, err
 }
 
-func (a AccountRepository) CreateAccount(form model.AccountForm) (int64, error) {
-	var accountID int64
+func (a AccountRepository) CreateAccount(form model.AccountForm) (*model.Account, error) {
 	hash := util.Password(form.Password).SHA256()
-	row := a.DB.QueryRow(`INSERT INTO Accounts (username, email, password) VALUES ($1, $2, $3) RETURNING account_id`, form.Username, form.Email, hash)
-	err := row.Scan(&accountID)
-	return accountID, err
+	account := model.Account{Username: form.Username, Email: form.Email, Password: hash}
+	err := a.db.Create(&account).Error
+	if err != nil {
+		return nil, err
+	}
+	return &account, err
 }
