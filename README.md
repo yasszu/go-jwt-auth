@@ -26,8 +26,8 @@ curl --location --request POST 'localhost:8088/login' \
 
 ```
 
-### POST /v1/verify
+### POST /v1/me
 ```sh
-curl --location --request GET 'localhost:8088/v1/verify' \
+curl --location --request GET 'localhost:8088/v1/me' \
 --header 'Cookie: Authorization={your_jwt_token}'
 ```
