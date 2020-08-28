@@ -1,17 +1,17 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	_ "github.com/lib/pq"
-	"go-jwt-auth/repository"
-	"go-jwt-auth/util"
 
 	"go-jwt-auth/config"
 	"go-jwt-auth/handler"
 	"go-jwt-auth/jwt"
+	"go-jwt-auth/repository"
+	"go-jwt-auth/util"
 )
 
 func main() {
@@ -21,14 +21,13 @@ func main() {
 	}
 
 	// Init Postgres
-	conn := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable",
+	conn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
+		conf.Postgres.Host,
+		conf.Postgres.Port,
 		conf.Postgres.Username,
 		conf.Postgres.DB,
 		conf.Postgres.Password)
-	db, err := sql.Open("postgres", conn)
-	if err != nil {
-		panic(err.Error())
-	}
+	db, err := gorm.Open("postgres", conn)
 	defer db.Close()
 
 	// Echo instance
@@ -56,7 +55,7 @@ func main() {
 	// /v1/..
 	v1 := e.Group("/v1") // Restricted group
 	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(conf.JWT.Secret)))
-	v1.GET("/verify", accountHandler.Verify)
+	v1.GET("/me", accountHandler.Me)
 
 	// Start server
 	e.Logger.Fatal(e.Start(conf.Server.Host + ":" + conf.Server.Port))
