@@ -1,10 +1,9 @@
 package repository
 
 import (
-	"github.com/jinzhu/gorm"
-
 	"go-jwt-auth/model"
 	"go-jwt-auth/util"
+	"gorm.io/gorm"
 )
 
 type IAccountRepository interface {

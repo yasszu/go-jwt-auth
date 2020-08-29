@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"go-jwt-auth/config"
 	"go-jwt-auth/handler"
@@ -21,14 +21,13 @@ func main() {
 	}
 
 	// Init Postgres
-	conn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
+	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 		conf.Postgres.Host,
 		conf.Postgres.Port,
 		conf.Postgres.Username,
 		conf.Postgres.DB,
 		conf.Postgres.Password)
-	db, err := gorm.Open("postgres", conn)
-	defer db.Close()
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	// Echo instance
 	e := echo.New()
