@@ -2,14 +2,14 @@ package util
 
 import "github.com/go-playground/validator/v10"
 
-type CustomValidator struct {
+type Validator struct {
 	validator *validator.Validate
 }
 
-func (cv *CustomValidator) Validate(i interface{}) error {
+func (cv *Validator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 
-func NewCustomValidator() *CustomValidator {
-	return &CustomValidator{validator: validator.New()}
+func NewValidator() *Validator {
+	return &Validator{validator: validator.New()}
 }

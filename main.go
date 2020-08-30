@@ -31,7 +31,7 @@ func main() {
 
 	// Echo instance
 	e := echo.New()
-	e.Validator = util.NewCustomValidator()
+	e.Validator = util.NewValidator()
 
 	// Middleware
 	e.Use(middleware.Logger())
