@@ -3,6 +3,7 @@ CREATE TABLE Accounts (
 	username VARCHAR ( 255 ) NOT NULL,
     email VARCHAR ( 255 ) NOT NULL,
 	password VARCHAR ( 255 ) NOT NULL,
-	created_on TIMESTAMP NOT NULL DEFAULT current_timestamp,
+	created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+	updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
 	UNIQUE(email)
 );

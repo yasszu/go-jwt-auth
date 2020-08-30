@@ -7,7 +7,8 @@ type Account struct {
 	Username  string
 	Email     string
 	Password  string
-	CreatedOn time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type AccountForm struct {
@@ -20,14 +21,14 @@ type AccountResponse struct {
 	AccountID int64     `json:"account_id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
-	CreatedOn time.Time `json:"crated_on"`
+	CreatedAt time.Time `json:"crated_at"`
 }
 
-func (a *Account) ToResponse() AccountResponse {
+func (a *Account) Response() AccountResponse {
 	return AccountResponse{
 		AccountID: a.AccountID,
 		Username:  a.Username,
 		Email:     a.Email,
-		CreatedOn: a.CreatedOn,
+		CreatedAt: a.CreatedAt,
 	}
 }

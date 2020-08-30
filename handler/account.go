@@ -60,8 +60,7 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	response := account.ToResponse()
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, account.Response())
 }
 
 // Login POST /login
@@ -86,8 +85,7 @@ func (h *AccountHandler) Login(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	response := account.ToResponse()
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, account.Response())
 }
 
 // Logout Get /logout
@@ -103,6 +101,5 @@ func (h *AccountHandler) Me(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	response := account.ToResponse()
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, account.Response())
 }
