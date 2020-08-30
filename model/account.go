@@ -17,7 +17,7 @@ type AccountForm struct {
 }
 
 type AccountResponse struct {
-	AccountID int64     `json:"name"`
+	AccountID int64     `json:"account_id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	CreatedOn time.Time `json:"crated_on"`

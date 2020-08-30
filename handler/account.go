@@ -30,18 +30,25 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 }
 
 // Signup -> POST /signup
-func (h AccountHandler) Signup(c echo.Context) error {
+func (h *AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	username := c.FormValue("username")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-	from := model.AccountForm{Username: username, Email: email, Password: password}
-	if err := c.Validate(from); err != nil {
+	form := model.AccountForm{Username: username, Email: email, Password: password}
+	if err := c.Validate(form); err != nil {
 		return err
 	}
 
-	account, err := h.accountRepository.CreateAccount(from)
+	hash := util.Password(form.Password).SHA256()
+	account := model.Account{
+		Username: form.Username,
+		Email:    form.Email,
+		Password: hash,
+	}
+
+	err := h.accountRepository.CreateAccount(&account)
 	if err != nil {
 		return err
 	}
@@ -52,51 +59,61 @@ func (h AccountHandler) Signup(c echo.Context) error {
 	}
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-	return c.JSON(http.StatusOK, echo.Map{
-		"token": token,
-	})
+
+	response := model.AccountResponse{
+		AccountID: account.AccountID,
+		Username:  account.Username,
+		Email:     account.Email,
+		CreatedOn: account.CreatedOn,
+	}
+	return c.JSON(http.StatusOK, response)
 }
 
 // Login -> POST /login
-func (h AccountHandler) Login(c echo.Context) error {
+func (h *AccountHandler) Login(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
 	password := util.Password(c.FormValue("password"))
 
-	a, err := h.accountRepository.GetAccountByEmail(email)
+	account, err := h.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
 
-	if a.Password != password.SHA256() {
+	if account.Password != password.SHA256() {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
-	token, err := jwt.Sign(a.Email, a.AccountID, secret)
+	token, err := jwt.Sign(account.Email, account.AccountID, secret)
 	if err != nil {
 		return err
 	}
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-	return c.JSON(http.StatusOK, echo.Map{
-		"token": token,
-	})
+
+	response := model.AccountResponse{
+		AccountID: account.AccountID,
+		Username:  account.Username,
+		Email:     account.Email,
+		CreatedOn: account.CreatedOn,
+	}
+	return c.JSON(http.StatusOK, response)
 }
 
 // Logout -> Get /logout
-func (h AccountHandler) Logout(c echo.Context) error {
+func (h *AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
 // Me -> Get /v1/me
-func (h AccountHandler) Me(c echo.Context) error {
+func (h *AccountHandler) Me(c echo.Context) error {
 	accountId := jwt.Verify(c)
 	account, err := h.accountRepository.GetAccountById(accountId)
 	if err != nil {
 		return err
 	}
-	response := &model.AccountResponse{
+	response := model.AccountResponse{
 		AccountID: account.AccountID,
 		Username:  account.Username,
 		Email:     account.Email,
