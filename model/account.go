@@ -22,3 +22,12 @@ type AccountResponse struct {
 	Email     string    `json:"email"`
 	CreatedOn time.Time `json:"crated_on"`
 }
+
+func (a *Account) ToResponse() AccountResponse {
+	return AccountResponse{
+		AccountID: a.AccountID,
+		Username:  a.Username,
+		Email:     a.Email,
+		CreatedOn: a.CreatedOn,
+	}
+}

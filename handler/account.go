@@ -60,16 +60,11 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	response := model.AccountResponse{
-		AccountID: account.AccountID,
-		Username:  account.Username,
-		Email:     account.Email,
-		CreatedOn: account.CreatedOn,
-	}
+	response := account.ToResponse()
 	return c.JSON(http.StatusOK, response)
 }
 
-// Login -> POST /login
+// Login POST /login
 func (h *AccountHandler) Login(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
@@ -91,33 +86,23 @@ func (h *AccountHandler) Login(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	response := model.AccountResponse{
-		AccountID: account.AccountID,
-		Username:  account.Username,
-		Email:     account.Email,
-		CreatedOn: account.CreatedOn,
-	}
+	response := account.ToResponse()
 	return c.JSON(http.StatusOK, response)
 }
 
-// Logout -> Get /logout
+// Logout Get /logout
 func (h *AccountHandler) Logout(c echo.Context) error {
 	util.CookieStore{Key: "Authorization"}.Delete(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
-// Me -> Get /v1/me
+// Me  Get /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
 	accountId := jwt.Verify(c)
 	account, err := h.accountRepository.GetAccountById(accountId)
 	if err != nil {
 		return err
 	}
-	response := model.AccountResponse{
-		AccountID: account.AccountID,
-		Username:  account.Username,
-		Email:     account.Email,
-		CreatedOn: account.CreatedOn,
-	}
+	response := account.ToResponse()
 	return c.JSON(http.StatusOK, response)
 }
