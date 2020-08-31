@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Account struct {
-	AccountID int64 `gorm:"primary_key"`
+	AccountID uint `gorm:"primary_key"`
 	Username  string
 	Email     string
 	Password  string
@@ -18,7 +18,7 @@ type AccountForm struct {
 }
 
 type AccountResponse struct {
-	AccountID int64     `json:"account_id"`
+	AccountID uint     `json:"account_id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"crated_at"`

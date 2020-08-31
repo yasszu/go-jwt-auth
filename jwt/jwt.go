@@ -11,11 +11,11 @@ import (
 // CustomClaims are custom claims extending default ones.
 type CustomClaims struct {
 	Email     string `json:"email"`
-	AccountID int64  `json:"account_id"`
+	AccountID uint  `json:"account_id"`
 	jwt.StandardClaims
 }
 
-func Sign(email string, id int64, secret string) (string, error) {
+func Sign(email string, id uint, secret string) (string, error) {
 	// Set custom claims
 	claims := &CustomClaims{
 		email,
@@ -33,7 +33,7 @@ func Sign(email string, id int64, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func Verify(c echo.Context) int64 {
+func Verify(c echo.Context) uint {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*CustomClaims)
 	return claims.AccountID

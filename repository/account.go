@@ -7,7 +7,7 @@ import (
 
 type IAccountRepository interface {
 	GetAccountByEmail(email string) (*model.Account, error)
-	GetAccountById(id int64) (*model.Account, error)
+	GetAccountById(id uint) (*model.Account, error)
 	CreateAccount(account *model.Account) error
 }
 
@@ -25,7 +25,7 @@ func (a *AccountRepository) GetAccountByEmail(email string) (*model.Account, err
 	return &account, err
 }
 
-func (a *AccountRepository) GetAccountById(id int64) (*model.Account, error) {
+func (a *AccountRepository) GetAccountById(id uint) (*model.Account, error) {
 	var account model.Account
 	err := a.db.Where("account_id = ?", id).First(&account).Error
 	return &account, err
