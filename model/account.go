@@ -18,13 +18,13 @@ type AccountForm struct {
 }
 
 type AccountResponse struct {
-	AccountID uint     `json:"account_id"`
+	AccountID uint      `json:"account_id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"crated_at"`
 }
 
-func (a *Account) Response() AccountResponse {
+func NewAccountResponse(a *Account) AccountResponse {
 	return AccountResponse{
 		AccountID: a.AccountID,
 		Username:  a.Username,

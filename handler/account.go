@@ -60,7 +60,8 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	return c.JSON(http.StatusOK, account.Response())
+	res := model.NewAccountResponse(&account)
+	return c.JSON(http.StatusOK, res)
 }
 
 // Login POST /login
@@ -85,7 +86,8 @@ func (h *AccountHandler) Login(c echo.Context) error {
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	return c.JSON(http.StatusOK, account.Response())
+	res := model.NewAccountResponse(account)
+	return c.JSON(http.StatusOK, res)
 }
 
 // Logout Get /logout
@@ -96,10 +98,12 @@ func (h *AccountHandler) Logout(c echo.Context) error {
 
 // Me  Get /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
-	accountId := jwt.Verify(c)
-	account, err := h.accountRepository.GetAccountById(accountId)
+	accountID := jwt.Verify(c)
+	account, err := h.accountRepository.GetAccountById(accountID)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, account.Response())
+
+	res := model.NewAccountResponse(account)
+	return c.JSON(http.StatusOK, res)
 }
