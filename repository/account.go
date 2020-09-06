@@ -27,11 +27,10 @@ func (r *AccountRepository) GetAccountByEmail(email string) (*model.Account, err
 
 func (r *AccountRepository) GetAccountById(id uint) (*model.Account, error) {
 	var account model.Account
-	err := r.db.Where("account_id = ?", id).First(&account).Error
+	err := r.db.First(&account, id).Error
 	return &account, err
 }
 
 func (r *AccountRepository) CreateAccount(account *model.Account) error {
-	err := r.db.Create(account).Error
-	return err
+	return r.db.Create(account).Error
 }

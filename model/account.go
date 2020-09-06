@@ -1,14 +1,15 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 type Account struct {
-	AccountID uint `gorm:"primary_key"`
+	gorm.Model
 	Username  string
 	Email     string
 	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 type AccountForm struct {
@@ -26,7 +27,7 @@ type AccountResponse struct {
 
 func NewAccountResponse(a *Account) AccountResponse {
 	return AccountResponse{
-		AccountID: a.AccountID,
+		AccountID: a.ID,
 		Username:  a.Username,
 		Email:     a.Email,
 		CreatedAt: a.CreatedAt,

@@ -29,7 +29,7 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
-// Signup -> POST /signup
+// Signup POST /signup
 func (h *AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	username := c.FormValue("username")
@@ -53,7 +53,7 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	token, err := jwt.Sign(email, account.AccountID, secret)
+	token, err := jwt.Sign(email, account.ID, secret)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
-	token, err := jwt.Sign(account.Email, account.AccountID, secret)
+	token, err := jwt.Sign(account.Email, account.ID, secret)
 	if err != nil {
 		return err
 	}
