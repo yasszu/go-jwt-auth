@@ -1,15 +1,16 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 type Account struct {
-	gorm.Model
-	Username  string
-	Email     string
-	Password  string
+	ID        uint `gorm:"primaryKey"`
+	Username string
+	Email    string
+	Password string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type AccountForm struct {

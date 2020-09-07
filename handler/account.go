@@ -38,7 +38,7 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 	form := model.AccountForm{Username: username, Email: email, Password: password}
 	if err := c.Validate(form); err != nil {
-		return err
+		return c.String(http.StatusBadRequest, "Validation Error")
 	}
 
 	hash := util.Password(form.Password).SHA256()

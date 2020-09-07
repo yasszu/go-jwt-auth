@@ -7,8 +7,10 @@ import (
 
 type IAccountRepository interface {
 	GetAccountByEmail(email string) (*model.Account, error)
-	GetAccountById(id uint) (*model.Account, error)
+	GetAccountById(accountID uint) (*model.Account, error)
 	CreateAccount(account *model.Account) error
+	UpdateAccount(account *model.Account) error
+	DeleteAccount(accountID uint) error
 }
 
 type AccountRepository struct {
@@ -33,4 +35,12 @@ func (r *AccountRepository) GetAccountById(id uint) (*model.Account, error) {
 
 func (r *AccountRepository) CreateAccount(account *model.Account) error {
 	return r.db.Create(account).Error
+}
+
+func (r *AccountRepository) UpdateAccount(account *model.Account) error {
+	return r.db.Save(account).Error
+}
+
+func (r *AccountRepository) DeleteAccount(accountID uint) error {
+	return r.db.Delete(&model.Account{}, accountID).Error
 }
