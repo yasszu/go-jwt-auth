@@ -28,10 +28,14 @@ func (s CookieStore) Delete(c echo.Context) {
 	c.SetCookie(cookie)
 }
 
-const authKey = "Authorization"
+const (
+	authKey    = "Authorization"
+	expireHour = 24 * 120
+)
 
 func SaveAuthorizationCookie(token string, c echo.Context) {
-	CookieStore{Key: authKey, Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
+	cookie := CookieStore{Key: authKey, Value: token, ExpireTime: time.Hour * expireHour}
+	cookie.Write(c)
 }
 
 func DeleteAuthorizationCookie(c echo.Context) {
