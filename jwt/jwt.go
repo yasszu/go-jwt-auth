@@ -15,6 +15,10 @@ type CustomClaims struct {
 	jwt.StandardClaims
 }
 
+const (
+	expireHour = 24 * 121
+)
+
 func Sign(email string, id uint, secret string) (string, error) {
 	// Set custom claims
 	claims := &CustomClaims{
@@ -22,7 +26,7 @@ func Sign(email string, id uint, secret string) (string, error) {
 		id,
 		jwt.StandardClaims{
 
-			ExpiresAt: time.Now().Add(time.Hour * 64 * 100).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * expireHour).Unix(),
 		},
 	}
 
