@@ -7,8 +7,8 @@ import (
 )
 
 type CookieStore struct {
-	Key string
-	Value string
+	Key        string
+	Value      string
 	ExpireTime time.Duration
 }
 
@@ -28,3 +28,12 @@ func (s CookieStore) Delete(c echo.Context) {
 	c.SetCookie(cookie)
 }
 
+const authKey = "Authorization"
+
+func SaveAuthorizationCookie(token string, c echo.Context) {
+	CookieStore{Key: authKey, Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
+}
+
+func DeleteAuthorizationCookie(c echo.Context) {
+	CookieStore{Key: authKey}.Delete(c)
+}

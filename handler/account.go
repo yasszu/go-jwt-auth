@@ -1,10 +1,8 @@
 package handler
 
 import (
-	"net/http"
-	"time"
-
 	"github.com/labstack/echo"
+	"net/http"
 
 	"go-jwt-auth/config"
 	"go-jwt-auth/jwt"
@@ -43,11 +41,11 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 	account, err := form.ToAccount()
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Server error")
+		return err
 	}
 
 	if err := h.accountRepository.CreateAccount(account); err != nil {
-		return c.String(http.StatusInternalServerError, "Server error")
+		return err
 	}
 
 	token, err := jwt.Sign(form.Email, account.ID, secret)
@@ -55,10 +53,8 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-
-	res := model.NewAccountResponse(account)
-	return c.JSON(http.StatusOK, res)
+	util.SaveAuthorizationCookie(token, c)
+	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }
 
 // Login POST /login
@@ -81,15 +77,13 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return err
 	}
 
-	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
-
-	res := model.NewAccountResponse(account)
-	return c.JSON(http.StatusOK, res)
+	util.SaveAuthorizationCookie(token, c)
+	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }
 
 // Logout Get /logout
 func (h *AccountHandler) Logout(c echo.Context) error {
-	util.CookieStore{Key: "Authorization"}.Delete(c)
+	util.DeleteAuthorizationCookie(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
@@ -101,6 +95,5 @@ func (h *AccountHandler) Me(c echo.Context) error {
 		return err
 	}
 
-	res := model.NewAccountResponse(account)
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }
