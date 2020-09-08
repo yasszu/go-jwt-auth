@@ -68,7 +68,7 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
 
-	if err := util.ComparePassword(account.Password, password); err != nil {
+	if err := util.ComparePassword(account.PasswordHash, password); err != nil {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 

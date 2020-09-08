@@ -6,12 +6,12 @@ import (
 )
 
 type Account struct {
-	ID        uint `gorm:"primaryKey"`
-	Username  string
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID           uint `gorm:"primaryKey"`
+	Username     string
+	Email        string
+	PasswordHash string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type AccountForm struct {
@@ -33,9 +33,9 @@ func (form *AccountForm) ToAccount() (*Account, error) {
 		return nil, err
 	}
 	account := Account{
-		Username: form.Username,
-		Email:    form.Email,
-		Password: hash,
+		Username:     form.Username,
+		Email:        form.Email,
+		PasswordHash: hash,
 	}
 	return &account, err
 }
