@@ -32,35 +32,32 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 // Signup POST /signup
 func (h *AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
-	username := c.FormValue("username")
-	email := c.FormValue("email")
-	password := c.FormValue("password")
 
-	form := model.AccountForm{Username: username, Email: email, Password: password}
+	form := new(model.AccountForm)
+	if err := c.Bind(form); err != nil {
+		return c.String(http.StatusBadRequest, "BadRequest")
+	}
 	if err := c.Validate(form); err != nil {
 		return c.String(http.StatusBadRequest, "Validation Error")
 	}
 
-	hash := util.Password(form.Password).SHA256()
-	account := model.Account{
-		Username: form.Username,
-		Email:    form.Email,
-		Password: hash,
-	}
-
-	err := h.accountRepository.CreateAccount(&account)
+	account, err := form.ToAccount()
 	if err != nil {
-		return err
+		return c.String(http.StatusInternalServerError, "Server error")
 	}
 
-	token, err := jwt.Sign(email, account.ID, secret)
+	if err := h.accountRepository.CreateAccount(account); err != nil {
+		return c.String(http.StatusInternalServerError, "Server error")
+	}
+
+	token, err := jwt.Sign(form.Email, account.ID, secret)
 	if err != nil {
 		return err
 	}
 
 	util.CookieStore{Key: "Authorization", Value: token, ExpireTime: time.Hour * 60 * 99}.Write(c)
 
-	res := model.NewAccountResponse(&account)
+	res := model.NewAccountResponse(account)
 	return c.JSON(http.StatusOK, res)
 }
 
@@ -68,14 +65,14 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 func (h *AccountHandler) Login(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
-	password := util.Password(c.FormValue("password"))
+	password := c.FormValue("password")
 
 	account, err := h.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
 
-	if account.Password != password.SHA256() {
+	if err := util.ComparePassword(account.Password, password); err != nil {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
