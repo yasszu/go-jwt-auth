@@ -9,7 +9,7 @@ func GenerateBCryptoHash(password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(hash), err
+	return string(hash), nil
 }
 
 func ComparePassword(hash string, password string) error {

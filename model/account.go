@@ -27,17 +27,15 @@ type AccountResponse struct {
 	CreatedAt time.Time `json:"crated_at"`
 }
 
-func (form *AccountForm) ToAccount() (*Account, error) {
+func (a *Account) Populate(form *AccountForm) error {
 	hash, err := util.GenerateBCryptoHash(form.Password)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	account := Account{
-		Username:     form.Username,
-		Email:        form.Email,
-		PasswordHash: hash,
-	}
-	return &account, err
+	a.Username = form.Username
+	a.Email = form.Email
+	a.PasswordHash = hash
+	return nil
 }
 
 func NewAccountResponse(a *Account) AccountResponse {

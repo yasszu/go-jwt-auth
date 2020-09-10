@@ -31,20 +31,19 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *config.Co
 func (h *AccountHandler) Signup(c echo.Context) error {
 	secret := h.conf.JWT.Secret
 
-	form := new(model.AccountForm)
-	if err := c.Bind(form); err != nil {
+	var form model.AccountForm
+	if err := c.Bind(&form); err != nil {
 		return c.String(http.StatusBadRequest, "BadRequest")
 	}
-	if err := c.Validate(form); err != nil {
+	if err := c.Validate(&form); err != nil {
 		return c.String(http.StatusBadRequest, "Validation Error")
 	}
 
-	account, err := form.ToAccount()
-	if err != nil {
+	var account model.Account
+	if err := account.Populate(&form); err != nil {
 		return err
 	}
-
-	if err := h.accountRepository.CreateAccount(account); err != nil {
+	if err := h.accountRepository.CreateAccount(&account); err != nil {
 		return err
 	}
 
@@ -54,7 +53,7 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 	}
 
 	util.SaveAuthorizationCookie(token, c)
-	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
+	return c.JSON(http.StatusOK, model.NewAccountResponse(&account))
 }
 
 // Login POST /login
@@ -67,7 +66,6 @@ func (h *AccountHandler) Login(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
-
 	if err := util.ComparePassword(account.PasswordHash, password); err != nil {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
