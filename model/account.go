@@ -35,7 +35,7 @@ func (a *Account) Populate(form *AccountForm) error {
 	a.Username = form.Username
 	a.Email = form.Email
 	a.PasswordHash = hash
-	return nil
+	return err
 }
 
 func NewAccountResponse(a *Account) AccountResponse {

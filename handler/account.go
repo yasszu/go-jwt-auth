@@ -79,13 +79,13 @@ func (h *AccountHandler) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }
 
-// Logout Get /logout
+// Logout POST /logout
 func (h *AccountHandler) Logout(c echo.Context) error {
 	util.DeleteAuthorizationCookie(c)
 	return c.String(http.StatusOK, "Logout success")
 }
 
-// Me  Get /v1/me
+// Me  GET /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
 	accountID := jwt.Verify(c)
 	account, err := h.accountRepository.GetAccountById(accountID)
