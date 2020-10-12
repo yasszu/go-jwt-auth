@@ -1,12 +1,12 @@
-package config
+package conf
 
 import (
 	"gopkg.in/yaml.v3"
 	"os"
 )
 
-// Config is conf.yml
-type Config struct {
+// Conf is conf.yml
+type Conf struct {
 	Server struct {
 		Port string `yaml:"port"`
 		Host string `yaml:"host"`
@@ -23,21 +23,17 @@ type Config struct {
 	} `yaml:"jwt"`
 }
 
-func NewConfig() Config {
-	return Config{}
-}
-
-// LoadConfig load conf.yml
-func (cfg Config) Load() (Config, error) {
-	f, err := os.Open("config/conf.yml")
+func NewConf() (*Conf, error) {
+	var cnf Conf
+	f, err := os.Open("conf/conf.yml")
 	if err != nil {
-		return cfg, err
+		return nil, err
 	}
 	defer f.Close()
 
 	decoder := yaml.NewDecoder(f)
-	if err := decoder.Decode(&cfg); err != nil {
-		return cfg, err
+	if err := decoder.Decode(&cnf); err != nil {
+		return nil, err
 	}
-	return cfg, nil
+	return &cnf, nil
 }

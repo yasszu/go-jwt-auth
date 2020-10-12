@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo"
 	"net/http"
 
-	"go-jwt-auth/config"
+	"go-jwt-auth/conf"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/model"
 	"go-jwt-auth/repository"
@@ -20,17 +20,15 @@ type IAccountHandler interface {
 
 type AccountHandler struct {
 	accountRepository repository.IAccountRepository
-	conf              *config.Config
+	conf              *conf.Conf
 }
 
-func NewAccountHandler(repository repository.IAccountRepository, conf *config.Config) *AccountHandler {
+func NewAccountHandler(repository repository.IAccountRepository, conf *conf.Conf) *AccountHandler {
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
 // Signup POST /signup
 func (h *AccountHandler) Signup(c echo.Context) error {
-	secret := h.conf.JWT.Secret
-
 	var form model.AccountForm
 	if err := c.Bind(&form); err != nil {
 		return c.String(http.StatusBadRequest, "BadRequest")
@@ -47,7 +45,7 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	token, err := jwt.Sign(form.Email, account.ID, secret)
+	token, err := jwt.Sign(form.Email, account.ID, h.conf.JWT.Secret)
 	if err != nil {
 		return err
 	}
@@ -58,7 +56,6 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 // Login POST /login
 func (h *AccountHandler) Login(c echo.Context) error {
-	secret := h.conf.JWT.Secret
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
@@ -70,7 +67,7 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
-	token, err := jwt.Sign(account.Email, account.ID, secret)
+	token, err := jwt.Sign(account.Email, account.ID, h.conf.JWT.Secret)
 	if err != nil {
 		return err
 	}
@@ -92,6 +89,5 @@ func (h *AccountHandler) Me(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
 	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }

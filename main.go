@@ -7,7 +7,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"go-jwt-auth/config"
+	"go-jwt-auth/conf"
 	"go-jwt-auth/handler"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/repository"
@@ -15,19 +15,22 @@ import (
 )
 
 func main() {
-	conf, err := config.NewConfig().Load()
+	cnf, err := conf.NewConf()
 	if err != nil {
 		panic(err.Error())
 	}
 
 	// Init Postgres
 	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
-		conf.Postgres.Host,
-		conf.Postgres.Port,
-		conf.Postgres.Username,
-		conf.Postgres.DB,
-		conf.Postgres.Password)
+		cnf.Postgres.Host,
+		cnf.Postgres.Port,
+		cnf.Postgres.Username,
+		cnf.Postgres.DB,
+		cnf.Postgres.Password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err.Error())
+	}
 
 	// Echo instance
 	e := echo.New()
@@ -41,7 +44,7 @@ func main() {
 	}))
 
 	accountRepository := repository.NewAccountRepository(db)
-	accountHandler := handler.NewAccountHandler(accountRepository, &conf)
+	accountHandler := handler.NewAccountHandler(accountRepository, cnf)
 
 	// Route => handler
 
@@ -53,9 +56,9 @@ func main() {
 
 	// /v1/..
 	v1 := e.Group("/v1") // Restricted group
-	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(conf.JWT.Secret)))
+	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(cnf.JWT.Secret)))
 	v1.GET("/me", accountHandler.Me)
 
 	// Start server
-	e.Logger.Fatal(e.Start(conf.Server.Host + ":" + conf.Server.Port))
+	e.Logger.Fatal(e.Start(cnf.Server.Host + ":" + cnf.Server.Port))
 }
