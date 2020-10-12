@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 
 	"go-jwt-auth/conf"
+	"go-jwt-auth/db"
 	"go-jwt-auth/handler"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/repository"
@@ -15,19 +13,8 @@ import (
 )
 
 func main() {
+	// Load conf
 	cnf, err := conf.NewConf()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// Init Postgres
-	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
-		cnf.Postgres.Host,
-		cnf.Postgres.Port,
-		cnf.Postgres.Username,
-		cnf.Postgres.DB,
-		cnf.Postgres.Password)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -36,6 +23,12 @@ func main() {
 	e := echo.New()
 	e.Validator = util.NewValidator()
 
+	// Establish DB connection
+	conn, err := db.NewConn(cnf)
+	if err != nil {
+		panic(err.Error())
+	}
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -43,10 +36,8 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
-	accountRepository := repository.NewAccountRepository(db)
+	accountRepository := repository.NewAccountRepository(conn)
 	accountHandler := handler.NewAccountHandler(accountRepository, cnf)
-
-	// Route => handler
 
 	// /..
 	e.GET("/", handler.Index)
@@ -55,7 +46,7 @@ func main() {
 	e.POST("/logout", accountHandler.Logout)
 
 	// /v1/..
-	v1 := e.Group("/v1") // Restricted group
+	v1 := e.Group("/v1")
 	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(cnf.JWT.Secret)))
 	v1.GET("/me", accountHandler.Me)
 
