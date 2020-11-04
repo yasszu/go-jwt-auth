@@ -11,7 +11,7 @@ import (
 // CustomClaims are custom claims extending default ones.
 type CustomClaims struct {
 	Email     string `json:"email"`
-	AccountID uint  `json:"account_id"`
+	AccountID uint   `json:"account_id"`
 	jwt.StandardClaims
 }
 
@@ -20,20 +20,13 @@ const (
 )
 
 func Sign(email string, id uint, secret string) (string, error) {
-	// Set custom claims
+	expiredAt := time.Now().Add(time.Hour * expireHour).Unix()
 	claims := &CustomClaims{
-		email,
-		id,
-		jwt.StandardClaims{
-
-			ExpiresAt: time.Now().Add(time.Hour * expireHour).Unix(),
-		},
+		Email:          email,
+		AccountID:      id,
+		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt},
 	}
-
-	// Create token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Generate encoded token and send it as response.
 	return token.SignedString([]byte(secret))
 }
 
