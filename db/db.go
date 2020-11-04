@@ -6,15 +6,29 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"time"
+)
+
+const (
+	retryTimes  = 20
+	waitingTime = 3 * time.Second
 )
 
 func NewConn(cnf *conf.Conf) (*gorm.DB, error) {
 	dialector := getDialector(cnf)
-	conn, err := gorm.Open(dialector, getConfig())
-	if err != nil {
-		return nil, err
+	config := getConfig()
+
+	db, err := gorm.Open(dialector, config)
+	for i := 0; i < retryTimes; i++ {
+		if err == nil {
+			break
+		}
+		fmt.Println("Waiting for getting the connection of Postgres...")
+		time.Sleep(waitingTime)
+		db, err = gorm.Open(dialector, config)
 	}
-	return conn, nil
+
+	return db, err
 }
 
 func getDialector(cnf *conf.Conf) gorm.Dialector {
