@@ -45,12 +45,10 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	token, err := jwt.Sign(form.Email, account.ID, h.conf.JWT.Secret)
-	if err != nil {
+	if err := h.signJWT(&account, c); err != nil {
 		return err
 	}
 
-	util.SaveAuthorizationCookie(token, c)
 	return c.JSON(http.StatusOK, model.NewAccountResponse(&account))
 }
 
@@ -67,12 +65,10 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
-	token, err := jwt.Sign(account.Email, account.ID, h.conf.JWT.Secret)
-	if err != nil {
+	if err := h.signJWT(account, c); err != nil {
 		return err
 	}
 
-	util.SaveAuthorizationCookie(token, c)
 	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
 }
 
@@ -84,10 +80,19 @@ func (h *AccountHandler) Logout(c echo.Context) error {
 
 // Me  GET /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
-	accountID := jwt.Verify(c)
+	accountID := jwt.Verify(c).AccountID
 	account, err := h.accountRepository.GetAccountById(accountID)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, model.NewAccountResponse(account))
+}
+
+func (h AccountHandler) signJWT(account *model.Account, c echo.Context) error {
+	token, err := jwt.Sign(account.Email, account.ID, h.conf.JWT.Secret)
+	if err != nil {
+		return err
+	}
+	util.SaveAuthorizationCookie(token, c)
+	return nil
 }

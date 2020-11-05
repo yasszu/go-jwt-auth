@@ -30,10 +30,10 @@ func Sign(email string, id uint, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func Verify(c echo.Context) uint {
+func Verify(c echo.Context) *CustomClaims {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*CustomClaims)
-	return claims.AccountID
+	return claims
 }
 
 // MiddlewareConfig Configure middleware with the custom claims type
