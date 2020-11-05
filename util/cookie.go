@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+const (
+	authKey    = "Authorization"
+	expireHour = 24 * 120
+)
+
 type CookieStore struct {
 	Key        string
 	Value      string
@@ -27,11 +32,6 @@ func (s CookieStore) Delete(c echo.Context) {
 	cookie.Expires = time.Now().Add(0)
 	c.SetCookie(cookie)
 }
-
-const (
-	authKey    = "Authorization"
-	expireHour = 24 * 120
-)
 
 func SaveAuthorizationCookie(token string, c echo.Context) {
 	cookie := CookieStore{Key: authKey, Value: token, ExpireTime: time.Hour * expireHour}

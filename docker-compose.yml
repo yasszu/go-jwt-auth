@@ -10,7 +10,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./db/init:/docker-entrypoint-initdb.d
+      - ./initdb:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer
