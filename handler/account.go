@@ -27,6 +27,16 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *conf.Conf
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 
+func (h AccountHandler) RegisterRoot(e *echo.Echo) {
+	e.POST("/signup", h.Signup)
+	e.POST("/login", h.Login)
+	e.POST("/logout", h.Logout)
+}
+
+func (h AccountHandler) RegisterV1(v1 *echo.Group) {
+	v1.GET("/me", h.Me)
+}
+
 // Signup POST /signup
 func (h *AccountHandler) Signup(c echo.Context) error {
 	var form model.AccountForm

@@ -41,14 +41,12 @@ func main() {
 
 	// /..
 	e.GET("/", handler.Index)
-	e.POST("/signup", accountHandler.Signup)
-	e.POST("/login", accountHandler.Login)
-	e.POST("/logout", accountHandler.Logout)
+	accountHandler.RegisterRoot(e)
 
 	// /v1/..
 	v1 := e.Group("/v1")
 	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(cnf.JWT.Secret)))
-	v1.GET("/me", accountHandler.Me)
+	accountHandler.RegisterV1(v1)
 
 	// Start server
 	e.Logger.Fatal(e.Start(cnf.Server.Host + ":" + cnf.Server.Port))
