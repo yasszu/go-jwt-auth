@@ -64,14 +64,16 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 
 // Login POST /login
 func (h *AccountHandler) Login(c echo.Context) error {
-	email := c.FormValue("email")
-	password := c.FormValue("password")
+	var form model.LoginForm
+	if err := c.Bind(&form); err != nil {
+		return c.String(http.StatusBadRequest, "BadRequest")
+	}
 
-	account, err := h.accountRepository.GetAccountByEmail(email)
+	account, err := h.accountRepository.GetAccountByEmail(form.Email)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Not found email")
 	}
-	if err := util.ComparePassword(account.PasswordHash, password); err != nil {
+	if err := util.ComparePassword(account.PasswordHash, form.Password); err != nil {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 

@@ -21,8 +21,8 @@ type SignupForm struct {
 }
 
 type LoginForm struct {
-	Email    string `form:"email" validate:"required,email"`
-	Password string `form:"password" validate:"required,min=6,max=64"`
+	Email    string `form:"email"`
+	Password string `form:"password"`
 }
 
 type AccountResponse struct {

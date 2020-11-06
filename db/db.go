@@ -37,8 +37,7 @@ func getDialector(cnf *conf.Conf) gorm.Dialector {
 		cnf.Postgres.Port,
 		cnf.Postgres.Username,
 		cnf.Postgres.DB,
-		cnf.Postgres.Password,
-	)
+		cnf.Postgres.Password)
 	return postgres.Open(dsn)
 }
 
