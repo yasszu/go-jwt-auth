@@ -39,7 +39,7 @@ func (h AccountHandler) RegisterV1(v1 *echo.Group) {
 
 // Signup POST /signup
 func (h *AccountHandler) Signup(c echo.Context) error {
-	var form model.AccountForm
+	var form model.SignupForm
 	if err := c.Bind(&form); err != nil {
 		return c.String(http.StatusBadRequest, "BadRequest")
 	}
@@ -90,7 +90,7 @@ func (h *AccountHandler) Logout(c echo.Context) error {
 
 // Me  GET /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
-	accountID := jwt.Verify(c).AccountID
+	accountID := jwt.BindUser(c).AccountID
 	account, err := h.accountRepository.GetAccountById(accountID)
 	if err != nil {
 		return err

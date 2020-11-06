@@ -30,17 +30,17 @@ func Sign(email string, id uint, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func Verify(c echo.Context) *CustomClaims {
-	user := c.Get("user").(*jwt.Token)
+func BindUser(c echo.Context) *CustomClaims {
+	user := c.Get(middleware.DefaultJWTConfig.ContextKey).(*jwt.Token)
 	claims := user.Claims.(*CustomClaims)
 	return claims
 }
 
 // MiddlewareConfig Configure middleware with the custom claims type
 func MiddlewareConfig(secret string) middleware.JWTConfig {
-	return middleware.JWTConfig{
-		Claims:      &CustomClaims{},
-		SigningKey:  []byte(secret),
-		TokenLookup: "cookie:Authorization",
-	}
+	config := middleware.DefaultJWTConfig
+	config.Claims = &CustomClaims{}
+	config.SigningKey = []byte(secret)
+	config.TokenLookup = "cookie:Authorization"
+	return config
 }

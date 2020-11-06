@@ -1,6 +1,6 @@
 server:
   host: "localhost"
-  port: 8088
+  port: 8888
 
 postgres:
   host: "localhost"

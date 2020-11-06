@@ -14,8 +14,13 @@ type Account struct {
 	UpdatedAt    time.Time
 }
 
-type AccountForm struct {
+type SignupForm struct {
 	Username string `form:"username" validate:"required,max=40"`
+	Email    string `form:"email" validate:"required,email"`
+	Password string `form:"password" validate:"required,min=6,max=64"`
+}
+
+type LoginForm struct {
 	Email    string `form:"email" validate:"required,email"`
 	Password string `form:"password" validate:"required,min=6,max=64"`
 }
@@ -27,7 +32,7 @@ type AccountResponse struct {
 	CreatedAt time.Time `json:"crated_at"`
 }
 
-func (a *Account) Populate(form *AccountForm) error {
+func (a *Account) Populate(form *SignupForm) error {
 	hash, err := util.GenerateBCryptoHash(form.Password)
 	if err != nil {
 		return err

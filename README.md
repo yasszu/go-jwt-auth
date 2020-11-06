@@ -13,14 +13,14 @@
 ## API
 ### POST /signup
 ```sh
-curl --location --request POST 'localhost:8088/signup' \
+curl --location --request POST 'localhost:8888/signup' \
 --form 'email=test@sample.com' \
 --form 'password=12345'
 ```
 
 ### POST /login
 ```sh
-curl --location --request POST 'localhost:8088/login' \
+curl --location --request POST 'localhost:8888/login' \
 --form 'email=test@sample.com' \
 --form 'password=12345'
 
@@ -28,6 +28,6 @@ curl --location --request POST 'localhost:8088/login' \
 
 ### POST /v1/me
 ```sh
-curl --location --request GET 'localhost:8088/v1/me' \
+curl --location --request GET 'localhost:8888/v1/me' \
 --header 'Cookie: Authorization={your_jwt_token}'
 ```
