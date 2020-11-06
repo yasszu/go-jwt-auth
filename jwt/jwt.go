@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -37,10 +38,16 @@ func BindUser(c echo.Context) *CustomClaims {
 }
 
 // CookieAuthConfig Configure middleware with the custom claims type
-func CookieAuthConfig(secret string) middleware.JWTConfig {
+func CookieAuthConfig() middleware.JWTConfig {
 	config := middleware.DefaultJWTConfig
 	config.Claims = &CustomClaims{}
-	config.SigningKey = []byte(secret)
+	config.SigningKey = getSigningKey()
 	config.TokenLookup = "cookie:Authorization"
 	return config
+}
+
+func getSigningKey() []byte {
+	os.Setenv("JWT_SECRET", "b5a636fc-bd01-41b1-9780-7bbd906fa4c0") // Set dummy key
+	secret := os.Getenv("JWT_SECRET")
+	return []byte(secret)
 }
