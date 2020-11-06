@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/labstack/echo"
 	"net/http"
 
+	"github.com/labstack/echo/v4"
 	"go-jwt-auth/conf"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/model"

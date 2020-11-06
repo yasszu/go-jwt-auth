@@ -1,11 +1,11 @@
 package jwt
 
 import (
-	"github.com/labstack/echo/middleware"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // CustomClaims are custom claims extending default ones.
