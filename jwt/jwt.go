@@ -36,8 +36,8 @@ func BindUser(c echo.Context) *CustomClaims {
 	return claims
 }
 
-// MiddlewareConfig Configure middleware with the custom claims type
-func MiddlewareConfig(secret string) middleware.JWTConfig {
+// CookieAuthConfig Configure middleware with the custom claims type
+func CookieAuthConfig(secret string) middleware.JWTConfig {
 	config := middleware.DefaultJWTConfig
 	config.Claims = &CustomClaims{}
 	config.SigningKey = []byte(secret)

@@ -45,7 +45,7 @@ func main() {
 
 	// /v1/..
 	v1 := e.Group("/v1")
-	v1.Use(middleware.JWTWithConfig(jwt.MiddlewareConfig(cnf.JWT.Secret)))
+	v1.Use(middleware.JWTWithConfig(jwt.CookieAuthConfig(cnf.JWT.Secret)))
 	accountHandler.RegisterV1(v1)
 
 	// Start server
