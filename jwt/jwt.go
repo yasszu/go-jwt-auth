@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-// CustomClaims are custom claims extending default ones.
 type CustomClaims struct {
 	Email     string `json:"email"`
 	AccountID uint   `json:"account_id"`
@@ -20,7 +19,14 @@ const (
 	expireHour = 24 * 121
 )
 
-func Sign(email string, id uint, secret string) (string, error) {
+func getSigningKey() []byte {
+	defaultKey := "b5a636fc-bd01-41b1-9780-7bbd906fa4c0"
+	os.Setenv("JWT_SECRET", defaultKey)
+	secret := os.Getenv("JWT_SECRET")
+	return []byte(secret)
+}
+
+func Sign(email string, id uint) (string, error) {
 	expiredAt := time.Now().Add(time.Hour * expireHour).Unix()
 	claims := &CustomClaims{
 		Email:          email,
@@ -28,7 +34,7 @@ func Sign(email string, id uint, secret string) (string, error) {
 		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(secret))
+	return token.SignedString(getSigningKey())
 }
 
 func BindUser(c echo.Context) *CustomClaims {
@@ -37,7 +43,6 @@ func BindUser(c echo.Context) *CustomClaims {
 	return claims
 }
 
-// CookieAuthConfig Configure middleware with the custom claims type
 func CookieAuthConfig() middleware.JWTConfig {
 	config := middleware.DefaultJWTConfig
 	config.Claims = &CustomClaims{}
@@ -46,8 +51,9 @@ func CookieAuthConfig() middleware.JWTConfig {
 	return config
 }
 
-func getSigningKey() []byte {
-	os.Setenv("JWT_SECRET", "b5a636fc-bd01-41b1-9780-7bbd906fa4c0") // Set dummy key
-	secret := os.Getenv("JWT_SECRET")
-	return []byte(secret)
+func HeaderAuthConfig() middleware.JWTConfig {
+	config := middleware.DefaultJWTConfig
+	config.Claims = &CustomClaims{}
+	config.SigningKey = getSigningKey()
+	return config
 }

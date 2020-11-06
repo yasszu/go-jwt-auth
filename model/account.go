@@ -32,6 +32,10 @@ type AccountResponse struct {
 	CreatedAt time.Time `json:"crated_at"`
 }
 
+type TokenResponse struct {
+	Token string `json:"token"`
+}
+
 func (a *Account) Populate(form *SignupForm) error {
 	hash, err := util.GenerateBCryptoHash(form.Password)
 	if err != nil {

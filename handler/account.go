@@ -101,7 +101,7 @@ func (h *AccountHandler) Me(c echo.Context) error {
 }
 
 func (h AccountHandler) signJWT(account *model.Account, c echo.Context) error {
-	token, err := jwt.Sign(account.Email, account.ID, h.conf.JWT.Secret)
+	token, err := jwt.Sign(account.Email, account.ID)
 	if err != nil {
 		return err
 	}
