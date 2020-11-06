@@ -2,18 +2,10 @@
 
 ## Getting Started
 ### Setup environment
-Install direnv and [set hook at your shell](https://github.com/direnv/direnv/blob/master/docs/hook.md).
+1. Install direnv and [set hook at your shell](https://github.com/direnv/direnv/blob/master/docs/hook.md).
     ```
     $ brew install direnv
-    ```
-
-Setup GCP credential:
-    ```
     $ echo export JWT_SECRET="{your_cecret_key}" > .envrc
-    ```
-
-Load direnv:
-    ```
     $ direnv allow .
     ```
     
