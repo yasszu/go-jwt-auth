@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"go-jwt-auth/model"
 	"os"
 	"time"
 
@@ -10,8 +11,7 @@ import (
 )
 
 type CustomClaims struct {
-	Email     string `json:"email"`
-	AccountID uint   `json:"account_id"`
+	AccountID uint `json:"account_id"`
 	jwt.StandardClaims
 }
 
@@ -26,20 +26,28 @@ func getSigningKey() []byte {
 	return []byte(secret)
 }
 
-func Sign(email string, id uint) (string, error) {
-	expiredAt := time.Now().Add(time.Hour * expireHour).Unix()
+func Sign(account *model.Account) (*model.AccessToken, error) {
+	expiredAt := time.Now().Add(time.Hour * expireHour)
 	claims := &CustomClaims{
-		Email:          email,
-		AccountID:      id,
-		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt},
+		AccountID:      account.ID,
+		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt.Unix()},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(getSigningKey())
+	signedString, err := token.SignedString(getSigningKey())
+	if err != nil {
+		return nil, err
+	}
+	accessToken := &model.AccessToken{
+		AccountID: account.ID,
+		Token:     signedString,
+		ExpiresAt: expiredAt,
+	}
+	return accessToken, nil
 }
 
 func BindUser(c echo.Context) *CustomClaims {
-	user := c.Get(middleware.DefaultJWTConfig.ContextKey).(*jwt.Token)
-	claims := user.Claims.(*CustomClaims)
+	token := c.Get(middleware.DefaultJWTConfig.ContextKey).(*jwt.Token)
+	claims := token.Claims.(*CustomClaims)
 	return claims
 }
 

@@ -14,8 +14,7 @@ import (
 type IAccountHandler interface {
 	Signup(c echo.Context) error
 	Login(c echo.Context) error
-	//Logout(c echo.Context) error
-	Verify(c echo.Context) error
+	Me(c echo.Context) error
 }
 
 type AccountHandler struct {
@@ -30,7 +29,6 @@ func NewAccountHandler(repository repository.IAccountRepository, conf *conf.Conf
 func (h AccountHandler) RegisterRoot(e *echo.Echo) {
 	e.POST("/signup", h.Signup)
 	e.POST("/login", h.Login)
-	//e.POST("/logout", h.Logout)
 }
 
 func (h AccountHandler) RegisterV1(v1 *echo.Group) {
@@ -55,12 +53,12 @@ func (h *AccountHandler) Signup(c echo.Context) error {
 		return err
 	}
 
-	token, err := jwt.Sign(account.Email, account.ID)
+	token, err := jwt.Sign(&account)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, model.TokenResponse{Token: token})
+	return c.JSON(http.StatusOK, token)
 }
 
 // Login POST /login
@@ -78,19 +76,13 @@ func (h *AccountHandler) Login(c echo.Context) error {
 		return c.String(http.StatusForbidden, "Invalid password")
 	}
 
-	token, err := jwt.Sign(account.Email, account.ID)
+	token, err := jwt.Sign(account)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, model.TokenResponse{Token: token})
+	return c.JSON(http.StatusOK, token)
 }
-
-//// Logout POST /logout
-//func (h *AccountHandler) Logout(c echo.Context) error {
-//	util.DeleteAuthorizationCookie(c)
-//	return c.String(http.StatusOK, "Logout success")
-//}
 
 // Me  GET /v1/me
 func (h *AccountHandler) Me(c echo.Context) error {
