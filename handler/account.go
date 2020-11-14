@@ -11,18 +11,12 @@ import (
 	"go-jwt-auth/util"
 )
 
-type IAccountHandler interface {
-	Signup(c echo.Context) error
-	Login(c echo.Context) error
-	Me(c echo.Context) error
-}
-
 type AccountHandler struct {
-	accountRepository repository.IAccountRepository
+	accountRepository repository.AccountRepository
 	conf              *conf.Conf
 }
 
-func NewAccountHandler(repository repository.IAccountRepository, conf *conf.Conf) *AccountHandler {
+func NewAccountHandler(repository repository.AccountRepository, conf *conf.Conf) *AccountHandler {
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 

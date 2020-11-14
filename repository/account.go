@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type IAccountRepository interface {
+type AccountRepository interface {
 	GetAccountByEmail(email string) (*model.Account, error)
 	GetAccountById(accountID uint) (*model.Account, error)
 	CreateAccount(account *model.Account) error
@@ -13,34 +13,34 @@ type IAccountRepository interface {
 	DeleteAccount(accountID uint) error
 }
 
-type AccountRepository struct {
+type AccountRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func NewAccountRepository(db *gorm.DB) *AccountRepository {
-	return &AccountRepository{db}
+func NewAccountRepository(db *gorm.DB) *AccountRepositoryImpl {
+	return &AccountRepositoryImpl{db}
 }
 
-func (r *AccountRepository) GetAccountByEmail(email string) (*model.Account, error) {
+func (r *AccountRepositoryImpl) GetAccountByEmail(email string) (*model.Account, error) {
 	var account model.Account
 	err := r.db.Where("email = ?", email).First(&account).Error
 	return &account, err
 }
 
-func (r *AccountRepository) GetAccountById(id uint) (*model.Account, error) {
+func (r *AccountRepositoryImpl) GetAccountById(id uint) (*model.Account, error) {
 	var account model.Account
 	err := r.db.First(&account, id).Error
 	return &account, err
 }
 
-func (r *AccountRepository) CreateAccount(account *model.Account) error {
+func (r *AccountRepositoryImpl) CreateAccount(account *model.Account) error {
 	return r.db.Create(account).Error
 }
 
-func (r *AccountRepository) UpdateAccount(account *model.Account) error {
+func (r *AccountRepositoryImpl) UpdateAccount(account *model.Account) error {
 	return r.db.Save(account).Error
 }
 
-func (r *AccountRepository) DeleteAccount(accountID uint) error {
+func (r *AccountRepositoryImpl) DeleteAccount(accountID uint) error {
 	return r.db.Delete(&model.Account{}, accountID).Error
 }
