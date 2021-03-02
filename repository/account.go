@@ -18,7 +18,7 @@ type AccountRepositoryImpl struct {
 }
 
 func NewAccountRepository(db *gorm.DB) *AccountRepositoryImpl {
-	return &AccountRepositoryImpl{db}
+	return &AccountRepositoryImpl{db: db}
 }
 
 func (r *AccountRepositoryImpl) GetAccountByEmail(email string) (*model.Account, error) {

@@ -2,11 +2,12 @@ package db
 
 import (
 	"fmt"
+	"time"
+
 	"go-jwt-auth/conf"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"time"
 )
 
 const (
