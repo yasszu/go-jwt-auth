@@ -8,5 +8,5 @@ import (
 
 // Index Handler
 func Index(c echo.Context) error {
-	return c.String(http.StatusOK, "OK")
+	return c.JSON(http.StatusOK, OK())
 }
