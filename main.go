@@ -36,17 +36,19 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
+	index := handler.NewIndexHandler(conn)
+
 	accountRepository := repository.NewAccountRepository(conn)
-	accountHandler := handler.NewAccountHandler(accountRepository, cnf)
+	account := handler.NewAccountHandler(accountRepository, cnf)
 
 	// /..
-	e.GET("/", handler.Index)
-	accountHandler.RegisterRoot(e)
+	index.Register(e)
+	account.RegisterRoot(e)
 
 	// /v1/..
 	v1 := e.Group("/v1")
 	v1.Use(middleware.JWTWithConfig(jwt.HeaderAuthConfig()))
-	accountHandler.RegisterV1(v1)
+	account.RegisterV1(v1)
 
 	// Start server
 	e.Logger.Fatal(e.Start(cnf.Server.Host + ":" + cnf.Server.Port))
