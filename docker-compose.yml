@@ -1,8 +1,7 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: '3.9'
 
 services:
-
   db:
     image: postgres
     environment:
@@ -11,8 +10,17 @@ services:
       - 5432:5432
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
-
   adminer:
     image: adminer
     ports:
       - 8080:8080
+  api:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/go/src/app
+    env_file:
+      - .env
+
+  
