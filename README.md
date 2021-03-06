@@ -9,15 +9,10 @@
     $ direnv allow .
     ```
     
-### Start Server
-1. Start Postgres
+### Run Server
+1. Run containers
     ```
     $ docker-compose up
-    ```
-
-1. Run server
-    ```
-    $ go run main.go
     ```
 
 ## API
