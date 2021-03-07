@@ -2,9 +2,9 @@ package db
 
 import (
 	"fmt"
+	"go-jwt-auth/util"
 	"time"
 
-	"go-jwt-auth/conf"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,7 +15,7 @@ const (
 	waitingTime = 3 * time.Second
 )
 
-func NewConn(cnf *conf.Conf) (*gorm.DB, error) {
+func NewConn(cnf *util.Conf) (*gorm.DB, error) {
 	dialector := getDialector(cnf)
 	config := getConfig()
 
@@ -32,7 +32,7 @@ func NewConn(cnf *conf.Conf) (*gorm.DB, error) {
 	return db, err
 }
 
-func getDialector(cnf *conf.Conf) gorm.Dialector {
+func getDialector(cnf *util.Conf) gorm.Dialector {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 		cnf.Postgres.Host,
 		cnf.Postgres.Port,

@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"go-jwt-auth/conf"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/model"
 	"go-jwt-auth/repository"
@@ -13,10 +12,10 @@ import (
 
 type AccountHandler struct {
 	accountRepository repository.AccountRepository
-	conf              *conf.Conf
+	conf              *util.Conf
 }
 
-func NewAccountHandler(repository repository.AccountRepository, conf *conf.Conf) *AccountHandler {
+func NewAccountHandler(repository repository.AccountRepository, conf *util.Conf) *AccountHandler {
 	return &AccountHandler{accountRepository: repository, conf: conf}
 }
 

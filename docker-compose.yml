@@ -2,7 +2,7 @@
 version: '3.9'
 
 services:
-  db:
+  postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: password
@@ -21,6 +21,4 @@ services:
     volumes:
       - .:/go/src/app
     env_file:
-      - .env
-
-  
+      - config/.env

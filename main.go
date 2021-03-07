@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"go-jwt-auth/conf"
 	"go-jwt-auth/db"
 	"go-jwt-auth/handler"
 	"go-jwt-auth/jwt"
@@ -14,10 +13,7 @@ import (
 
 func main() {
 	// Load conf
-	cnf, err := conf.NewConf()
-	if err != nil {
-		panic(err.Error())
-	}
+	cnf := util.NewConf()
 
 	// Echo instance
 	e := echo.New()
