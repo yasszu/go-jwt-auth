@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func JwtCookieAuth() echo.MiddlewareFunc {
+func CookieAuthMiddleware() echo.MiddlewareFunc {
 	config := middleware.DefaultJWTConfig
 	config.Claims = &CustomClaims{}
 	config.SigningKey = getSigningKey()
@@ -13,7 +13,7 @@ func JwtCookieAuth() echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(config)
 }
 
-func JwtHeaderAuth() echo.MiddlewareFunc {
+func HeaderAuthMiddleware() echo.MiddlewareFunc {
 	config := middleware.DefaultJWTConfig
 	config.Claims = &CustomClaims{}
 	config.SigningKey = getSigningKey()
