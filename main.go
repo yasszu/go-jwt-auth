@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-
 	"go-jwt-auth/db"
 	"go-jwt-auth/handler"
 	"go-jwt-auth/jwt"
 	"go-jwt-auth/repository"
 	"go-jwt-auth/util"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -43,7 +43,7 @@ func main() {
 
 	// /v1/..
 	v1 := e.Group("/v1")
-	v1.Use(middleware.JWTWithConfig(jwt.HeaderAuthConfig()))
+	v1.Use(jwt.JwtHeaderAuth())
 	account.RegisterV1(v1)
 
 	// Start server
