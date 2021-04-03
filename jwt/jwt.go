@@ -50,18 +50,3 @@ func BindUser(c echo.Context) *CustomClaims {
 	claims := token.Claims.(*CustomClaims)
 	return claims
 }
-
-func CookieAuthConfig() middleware.JWTConfig {
-	config := middleware.DefaultJWTConfig
-	config.Claims = &CustomClaims{}
-	config.SigningKey = getSigningKey()
-	config.TokenLookup = "cookie:Authorization"
-	return config
-}
-
-func HeaderAuthConfig() middleware.JWTConfig {
-	config := middleware.DefaultJWTConfig
-	config.Claims = &CustomClaims{}
-	config.SigningKey = getSigningKey()
-	return config
-}
