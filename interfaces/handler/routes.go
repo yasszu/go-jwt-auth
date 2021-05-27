@@ -1,8 +1,9 @@
 package handler
 
 import (
+	"go-jwt-auth/interfaces/middleware"
+
 	"github.com/labstack/echo/v4"
-	"go-jwt-auth/jwt"
 )
 
 func (h Handler) Register(e *echo.Echo) {
@@ -16,6 +17,6 @@ func (h Handler) Register(e *echo.Echo) {
 
 	// -> /v1/
 	v1 := e.Group("/v1")
-	v1.Use(jwt.HeaderAuthMiddleware())
+	v1.Use(middleware.HeaderAuthMiddleware())
 	v1.GET("/me", h.Me)
 }

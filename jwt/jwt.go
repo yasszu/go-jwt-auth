@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"go-jwt-auth/model"
+	"go-jwt-auth/domain/entity"
 	"os"
 	"time"
 
@@ -10,34 +10,34 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+const (
+	expireHour = 24 * 121
+)
+
 type CustomClaims struct {
 	AccountID uint `json:"account_id"`
 	jwt.StandardClaims
 }
 
-const (
-	expireHour = 24 * 121
-)
-
-func getSigningKey() []byte {
+func GetSigningKey() []byte {
 	defaultKey := "b5a636fc-bd01-41b1-9780-7bbd906fa4c0"
-	os.Setenv("JWT_SECRET", defaultKey)
+	_ = os.Setenv("JWT_SECRET", defaultKey)
 	secret := os.Getenv("JWT_SECRET")
 	return []byte(secret)
 }
 
-func Sign(account *model.Account) (*model.AccessToken, error) {
+func Sign(account *entity.Account) (*entity.AccessToken, error) {
 	expiredAt := time.Now().Add(time.Hour * expireHour)
 	claims := &CustomClaims{
 		AccountID:      account.ID,
 		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt.Unix()},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedString, err := token.SignedString(getSigningKey())
+	signedString, err := token.SignedString(GetSigningKey())
 	if err != nil {
 		return nil, err
 	}
-	accessToken := &model.AccessToken{
+	accessToken := &entity.AccessToken{
 		AccountID: account.ID,
 		Token:     signedString,
 		ExpiresAt: expiredAt,

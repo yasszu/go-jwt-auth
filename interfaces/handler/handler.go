@@ -1,19 +1,22 @@
 package handler
 
 import (
-	"go-jwt-auth/repository"
+	"go-jwt-auth/application/usecase"
+	"go-jwt-auth/infrastructure/persistence"
+
 	"gorm.io/gorm"
 )
 
 type Handler struct {
-	db                *gorm.DB
-	accountRepository repository.AccountRepository
+	db             *gorm.DB
+	accountUsecase usecase.AccountUsecase
 }
 
 func NewHandler(db *gorm.DB) Handler {
+	accountRepository := persistence.NewAccountRepository(db)
 	return Handler{
-		db:                db,
-		accountRepository: repository.NewAccountRepository(db),
+		db:             db,
+		accountUsecase: usecase.NewAccountUsecase(accountRepository),
 	}
 }
 

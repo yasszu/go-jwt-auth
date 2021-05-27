@@ -1,11 +1,12 @@
 package main
 
 import (
+	"go-jwt-auth/infrastructure/db"
+	"go-jwt-auth/interfaces/handler"
+	"go-jwt-auth/util"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"go-jwt-auth/db"
-	"go-jwt-auth/handler"
-	"go-jwt-auth/util"
 )
 
 func main() {
