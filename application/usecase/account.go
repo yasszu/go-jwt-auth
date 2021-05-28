@@ -3,7 +3,7 @@ package usecase
 import (
 	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/domain/repository"
-	"go-jwt-auth/jwt"
+	"go-jwt-auth/infrastructure/jwt"
 	"go-jwt-auth/util"
 
 	"github.com/labstack/echo/v4"

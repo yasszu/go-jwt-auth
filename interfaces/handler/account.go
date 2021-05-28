@@ -2,7 +2,7 @@ package handler
 
 import (
 	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/jwt"
+	"go-jwt-auth/infrastructure/jwt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

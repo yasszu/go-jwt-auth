@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"go-jwt-auth/env"
+	"go-jwt-auth/util/env"
 )
 
 var (
@@ -13,7 +13,7 @@ func init() {
 	conf.loadEnv()
 }
 
-// Configuration
+// Conf Configuration
 type Conf struct {
 	Server struct {
 		Port string

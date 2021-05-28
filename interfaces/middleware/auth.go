@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"go-jwt-auth/jwt"
+	"go-jwt-auth/infrastructure/jwt"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
