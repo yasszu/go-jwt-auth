@@ -55,5 +55,5 @@ func (h *Handler) Me(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, entity.NewAccountResponse(account))
+	return c.JSON(http.StatusOK, account.Response())
 }

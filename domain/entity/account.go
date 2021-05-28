@@ -43,7 +43,7 @@ func (a *Account) Populate(form *SignupForm) error {
 	return err
 }
 
-func NewAccountResponse(a *Account) AccountResponse {
+func (a *Account) Response() AccountResponse {
 	return AccountResponse{
 		AccountID: a.ID,
 		Username:  a.Username,
