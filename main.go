@@ -1,12 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"go-jwt-auth/infrastructure/db"
 	"go-jwt-auth/interfaces/handler"
+	"go-jwt-auth/interfaces/middleware"
 	"go-jwt-auth/util"
+	"log"
+	"net/http"
+	"time"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -19,20 +23,29 @@ func main() {
 		panic(err.Error())
 	}
 
-	// Echo instance
-	e := echo.New()
-	e.Validator = util.NewValidator()
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-	}))
+	//// Echo instance
+	//e := echo.New()
+	//e.Validator = util.NewValidator()
+	//
+	//// Middleware
+	//e.Use(middleware.Logger())
+	//e.Use(middleware.Recover())
+	//e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	//	AllowOrigins: []string{"*"},
+	//}))
 
 	h := handler.NewHandler(conn)
-	h.Register(e)
+	r := mux.NewRouter()
+	r.Use(middleware.LoggingMiddleware)
+	h.Register(r)
+
+	srv := &http.Server{
+		Handler:      r,
+		Addr:         fmt.Sprintf("%s:%s", cnf.Server.Host, cnf.Server.Port),
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
 
 	// Start server
-	e.Logger.Fatal(e.Start(cnf.Server.Host + ":" + cnf.Server.Port))
+	log.Fatal(srv.ListenAndServe())
 }

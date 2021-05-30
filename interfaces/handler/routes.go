@@ -1,22 +1,17 @@
 package handler
 
-import (
-	"go-jwt-auth/interfaces/middleware"
+import "github.com/gorilla/mux"
 
-	"github.com/labstack/echo/v4"
-)
+func (h Handler) Register(r *mux.Router) {
+	root := r.PathPrefix("").Subrouter()
 
-func (h Handler) Register(e *echo.Echo) {
-	// -> /
-	root := e.Group("")
-	root.GET("/", h.Index)
-	root.GET("/healthy", h.Healthy)
-	root.GET("/ready", h.Ready)
-	root.POST("/signup", h.Signup)
-	root.POST("/login", h.Login)
+	root.HandleFunc("/", h.Index).Methods("GET")
+	root.HandleFunc("/healthy", h.Healthy).Methods("GET")
+	root.HandleFunc("/ready", h.Ready).Methods("GET")
+	//root.POST("/signup", h.Signup)
+	//root.POST("/login", h.Login)
 
-	// -> /v1/
-	v1 := e.Group("/v1")
-	v1.Use(middleware.HeaderAuthMiddleware())
-	v1.GET("/me", h.Me)
+	//v1 := e.Group("/v1")
+	//v1.Use(middleware.HeaderAuthMiddleware())
+	//v1.GET("/me", h.Me)
 }

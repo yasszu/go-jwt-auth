@@ -1,26 +1,25 @@
 package handler
 
 import (
+	"go-jwt-auth/interfaces/response"
 	"net/http"
-
-	"github.com/labstack/echo/v4"
 )
 
 // Index Handler
-func (h *Handler) Index(c echo.Context) error {
-	return c.JSON(http.StatusOK, OK())
+func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
+	response.JSON(w, http.StatusOK, OK())
 }
 
 // Healthy is used for liveness probes
-func (h *Handler) Healthy(c echo.Context) error {
-	return c.JSON(http.StatusOK, OK())
+func (h *Handler) Healthy(w http.ResponseWriter, r *http.Request) {
+	response.JSON(w, http.StatusOK, OK())
 }
 
 // Ready is used for readiness probes
-func (h *Handler) Ready(c echo.Context) error {
+func (h *Handler) Ready(w http.ResponseWriter, r *http.Request) {
 	var i int
 	if err := h.db.Raw("SELECT 1").Scan(&i).Error; err != nil {
-		return c.JSON(http.StatusInternalServerError, Err(err))
+		response.Error(w, http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, OK())
+	response.JSON(w, http.StatusOK, OK())
 }

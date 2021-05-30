@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator/v10 v10.3.0
+	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgproto3/v2 v2.0.4 // indirect
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/lib/pq v1.8.0 // indirect
