@@ -20,6 +20,7 @@ func (h *Handler) Ready(w http.ResponseWriter, r *http.Request) {
 	var i int
 	if err := h.db.Raw("SELECT 1").Scan(&i).Error; err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 	response.JSON(w, http.StatusOK, OK())
 }

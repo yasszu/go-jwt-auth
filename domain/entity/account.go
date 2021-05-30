@@ -20,11 +20,6 @@ type SignupForm struct {
 	Password string `form:"password" validate:"required,min=6,max=64"`
 }
 
-type LoginForm struct {
-	Email    string `form:"email"`
-	Password string `form:"password"`
-}
-
 type AccountResponse struct {
 	AccountID uint      `json:"account_id"`
 	Username  string    `json:"username"`

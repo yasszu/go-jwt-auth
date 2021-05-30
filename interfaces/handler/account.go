@@ -2,58 +2,56 @@ package handler
 
 import (
 	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/infrastructure/jwt"
+	"go-jwt-auth/interfaces/response"
 	"net/http"
-
-	"github.com/labstack/echo/v4"
 )
 
 // Signup POST /signup
-func (h *Handler) Signup(c echo.Context) error {
-	var form entity.SignupForm
-	if err := c.Bind(&form); err != nil {
-		return c.String(http.StatusBadRequest, "BadRequest")
-	}
-	if err := c.Validate(&form); err != nil {
-		return c.String(http.StatusBadRequest, "Validation Error")
+func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
+	form := entity.SignupForm{
+		Username: r.FormValue("username"),
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
 	}
 
 	var account entity.Account
 	if err := account.Populate(&form); err != nil {
-		return c.JSON(http.StatusInternalServerError, Err(err))
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	token, err := h.accountUsecase.SignUp(c, account)
+	token, err := h.accountUsecase.SignUp(r.Context(), account)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Err(err))
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	return c.JSON(http.StatusOK, token)
+	response.JSON(w, http.StatusOK, token)
 }
 
 // Login POST /login
-func (h *Handler) Login(c echo.Context) error {
-	var form entity.LoginForm
-	if err := c.Bind(&form); err != nil {
-		return c.String(http.StatusBadRequest, "BadRequest")
-	}
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+	password := r.FormValue("password")
 
-	token, err := h.accountUsecase.Login(c, form.Email, form.Password)
+	token, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
-		return c.String(http.StatusForbidden, "Invalid password")
+		response.Error(w, http.StatusForbidden, "Invalid password")
+		return
 	}
 
-	return c.JSON(http.StatusOK, token)
+	response.JSON(w, http.StatusOK, token)
 }
 
 // Me  GET /v1/me
-func (h *Handler) Me(c echo.Context) error {
-	accountID := jwt.BindUser(c).AccountID
+func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
+	accountID := 1
 
-	account, err := h.accountUsecase.Me(c, accountID)
+	account, err := h.accountUsecase.Me(r.Context(), uint(accountID))
 	if err != nil {
-		return err
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	return c.JSON(http.StatusOK, account.Response())
+	response.JSON(w, http.StatusOK, account)
 }
