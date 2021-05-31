@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-jwt-auth/infrastructure/db"
 	"go-jwt-auth/interfaces/handler"
 	"go-jwt-auth/interfaces/middleware"
@@ -30,11 +29,12 @@ func main() {
 
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         fmt.Sprintf("%s:%s", cnf.Server.Host, cnf.Server.Port),
+		Addr:         cnf.Server.Addr(),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
 	// Start server
+	log.Println(" ⇨ http server started on", cnf.Server.Addr())
 	log.Fatal(srv.ListenAndServe())
 }
