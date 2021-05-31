@@ -1,27 +1,28 @@
 package handler
 
 import (
-	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/infrastructure/auth"
+	"go-jwt-auth/interfaces/form"
 	"go-jwt-auth/interfaces/response"
+	"go-jwt-auth/interfaces/view"
 	"net/http"
 )
 
 // Signup POST /signup
 func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
-	form := entity.SignupForm{
+	f := form.Signup{
 		Username: r.FormValue("username"),
 		Email:    r.FormValue("email"),
 		Password: r.FormValue("password"),
 	}
 
-	if err := form.Validate(); err != nil {
+	if err := f.Validate(); err != nil {
 		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	var account entity.Account
-	if err := account.Populate(&form); err != nil {
+	account, err := f.Entity()
+	if err != nil {
 		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -63,5 +64,5 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.JSON(w, http.StatusOK, account)
+	response.JSON(w, http.StatusOK, view.NewAccount(account))
 }
