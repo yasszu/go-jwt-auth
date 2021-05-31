@@ -6,21 +6,21 @@ import (
 )
 
 // Index Handler
-func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, http.StatusOK, OK())
+func (h *Handler) Index(w http.ResponseWriter, _ *http.Request) {
+	response.OK(w)
 }
 
 // Healthy is used for liveness probes
-func (h *Handler) Healthy(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, http.StatusOK, OK())
+func (h *Handler) Healthy(w http.ResponseWriter, _ *http.Request) {
+	response.OK(w)
 }
 
 // Ready is used for readiness probes
-func (h *Handler) Ready(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Ready(w http.ResponseWriter, _ *http.Request) {
 	var i int
 	if err := h.db.Raw("SELECT 1").Scan(&i).Error; err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	response.JSON(w, http.StatusOK, OK())
+	response.OK(w)
 }

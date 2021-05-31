@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"go-jwt-auth/infrastructure/auth"
+	"go-jwt-auth/interfaces/response"
 	"net/http"
 	"strings"
 )
@@ -16,7 +17,7 @@ func JwtMiddleware(next http.Handler) http.Handler {
 
 			claims, err := auth.ValidateToken(token)
 			if err != nil {
-				http.Error(w, "Forbidden", http.StatusForbidden)
+				response.Error(w, http.StatusForbidden, "Forbidden")
 				return
 			}
 
@@ -24,7 +25,7 @@ func JwtMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		} else {
-			http.Error(w, "Forbidden", http.StatusForbidden)
+			response.Error(w, http.StatusForbidden, "Forbidden")
 			return
 		}
 	})
