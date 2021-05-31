@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/infrastructure/auth"
 	"go-jwt-auth/interfaces/response"
@@ -14,6 +13,11 @@ func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
 		Username: r.FormValue("username"),
 		Email:    r.FormValue("email"),
 		Password: r.FormValue("password"),
+	}
+
+	if err := form.Validate(); err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	var account entity.Account
@@ -52,8 +56,6 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusUnauthorized, "Unauthorized")
 		return
 	}
-
-	fmt.Println("accountID", accountID)
 
 	account, err := h.accountUsecase.Me(r.Context(), accountID)
 	if err != nil {

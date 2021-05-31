@@ -3,6 +3,8 @@ package entity
 import (
 	"go-jwt-auth/util"
 	"time"
+
+	v "github.com/go-playground/validator/v10"
 )
 
 type Account struct {
@@ -18,6 +20,12 @@ type SignupForm struct {
 	Username string `form:"username" validate:"required,max=40"`
 	Email    string `form:"email" validate:"required,email"`
 	Password string `form:"password" validate:"required,min=6,max=64"`
+}
+
+func (f SignupForm) Validate() error {
+	validate := v.New()
+	err := validate.Struct(f)
+	return err
 }
 
 type AccountResponse struct {
