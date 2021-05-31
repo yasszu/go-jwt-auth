@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"go-jwt-auth/domain/entity"
 	"net/http"
 	"os"
@@ -78,6 +77,5 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 func GetAccountID(r *http.Request) (uint, bool) {
 	ctx := r.Context()
 	accountID, ok := ctx.Value(AccountIdKey).(uint)
-	fmt.Println(ctx.Value(AccountIdKey))
 	return accountID, ok
 }

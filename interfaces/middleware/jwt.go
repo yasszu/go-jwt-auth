@@ -22,11 +22,10 @@ func JwtMiddleware(next http.Handler) http.Handler {
 
 			ctx := context.WithValue(r.Context(), auth.AccountIdKey, claims.AccountID)
 			next.ServeHTTP(w, r.WithContext(ctx))
+			return
 		} else {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
-
-		next.ServeHTTP(w, r)
 	})
 }
