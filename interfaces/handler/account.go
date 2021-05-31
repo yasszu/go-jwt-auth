@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"fmt"
 	"go-jwt-auth/domain/entity"
+	"go-jwt-auth/infrastructure/auth"
 	"go-jwt-auth/interfaces/response"
 	"net/http"
 )
@@ -45,9 +47,15 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 // Me  GET /v1/me
 func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
-	accountID := 1
+	accountID, ok := auth.GetAccountID(r)
+	if !ok {
+		response.Error(w, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
 
-	account, err := h.accountUsecase.Me(r.Context(), uint(accountID))
+	fmt.Println("accountID", accountID)
+
+	account, err := h.accountUsecase.Me(r.Context(), accountID)
 	if err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return

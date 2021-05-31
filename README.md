@@ -21,7 +21,7 @@
 curl --location --request POST 'localhost:8888/signup' \
 --form 'email=test@sample.com' \
 --form 'password=test12345' \
---form 'user1'
+--form 'username=user1'
 ```
 
 ### POST /login

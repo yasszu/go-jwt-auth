@@ -1,6 +1,10 @@
 package handler
 
-import "github.com/gorilla/mux"
+import (
+	"go-jwt-auth/interfaces/middleware"
+
+	"github.com/gorilla/mux"
+)
 
 func (h Handler) Register(r *mux.Router) {
 	root := r.PathPrefix("").Subrouter()
@@ -11,5 +15,6 @@ func (h Handler) Register(r *mux.Router) {
 	root.HandleFunc("/login", h.Login).Methods("POST")
 
 	v1 := r.PathPrefix("/v1").Subrouter()
+	v1.Use(middleware.JwtMiddleware)
 	v1.HandleFunc("/me", h.Me).Methods("GET")
 }

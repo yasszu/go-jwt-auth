@@ -4,7 +4,7 @@ import (
 	"context"
 	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/domain/repository"
-	"go-jwt-auth/infrastructure/jwt"
+	"go-jwt-auth/infrastructure/auth"
 	"go-jwt-auth/util"
 	"log"
 )
@@ -31,7 +31,7 @@ func (u *accountUsecase) SignUp(c context.Context, account entity.Account) (*ent
 		return nil, err
 	}
 
-	token, err := jwt.Sign(&account)
+	token, err := auth.Sign(&account)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
@@ -52,7 +52,7 @@ func (u *accountUsecase) Login(c context.Context, email string, password string)
 		return nil, err
 	}
 
-	token, err := jwt.Sign(account)
+	token, err := auth.Sign(account)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
