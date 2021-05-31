@@ -23,17 +23,6 @@ func main() {
 		panic(err.Error())
 	}
 
-	//// Echo instance
-	//e := echo.New()
-	//e.Validator = util.NewValidator()
-	//
-	//// Middleware
-	//e.Use(middleware.Logger())
-	//e.Use(middleware.Recover())
-	//e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	//	AllowOrigins: []string{"*"},
-	//}))
-
 	h := handler.NewHandler(conn)
 	r := mux.NewRouter()
 	r.Use(middleware.LoggingMiddleware)

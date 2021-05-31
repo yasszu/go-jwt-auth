@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"go-jwt-auth/util/env"
 )
 
@@ -36,7 +35,6 @@ func NewConf() *Conf {
 }
 
 func (c *Conf) loadEnv() {
-	fmt.Println("load env...")
 	s := env.NewServer()
 	c.Server.Host = s.Host.Value
 	c.Server.Port = s.Port.Value
