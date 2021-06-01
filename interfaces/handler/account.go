@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"go-jwt-auth/infrastructure/auth"
+	"go-jwt-auth/infrastructure/jwt"
 	"go-jwt-auth/interfaces/form"
 	"go-jwt-auth/interfaces/response"
 	"go-jwt-auth/interfaces/view"
@@ -52,7 +52,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 // Me  GET /v1/me
 func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
-	accountID, ok := auth.GetAccountID(r)
+	accountID, ok := jwt.GetAccountID(r.Context())
 	if !ok {
 		response.Error(w, http.StatusUnauthorized, "Unauthorized")
 		return

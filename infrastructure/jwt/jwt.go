@@ -1,13 +1,13 @@
-package auth
+package jwt
 
 import (
+	"context"
 	"errors"
 	"go-jwt-auth/domain/entity"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	jwtgo "github.com/dgrijalva/jwt-go"
 )
 
 const (
@@ -22,7 +22,7 @@ var (
 
 type CustomClaims struct {
 	AccountID uint `json:"account_id"`
-	jwt.StandardClaims
+	jwtgo.StandardClaims
 }
 
 func init() {
@@ -35,9 +35,9 @@ func Sign(account *entity.Account) (*entity.AccessToken, error) {
 	expiredAt := time.Now().Add(time.Hour * expireHour)
 	claims := &CustomClaims{
 		AccountID:      account.ID,
-		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt.Unix()},
+		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiredAt.Unix()},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
 	signedString, err := token.SignedString(signingKey)
 	if err != nil {
 		return nil, err
@@ -51,10 +51,10 @@ func Sign(account *entity.Account) (*entity.AccessToken, error) {
 }
 
 func ValidateToken(signedToken string) (*CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(
+	token, err := jwtgo.ParseWithClaims(
 		signedToken,
 		&CustomClaims{},
-		func(token *jwt.Token) (interface{}, error) {
+		func(token *jwtgo.Token) (interface{}, error) {
 			return signingKey, nil
 		},
 	)
@@ -74,8 +74,7 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 	return claims, nil
 }
 
-func GetAccountID(r *http.Request) (uint, bool) {
-	ctx := r.Context()
+func GetAccountID(ctx context.Context) (uint, bool) {
 	accountID, ok := ctx.Value(AccountIdKey).(uint)
 	return accountID, ok
 }
