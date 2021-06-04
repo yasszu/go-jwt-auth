@@ -10,9 +10,9 @@ import (
 )
 
 type AccountUsecase interface {
-	SignUp(c context.Context, account entity.Account) (*entity.AccessToken, error)
-	Login(c context.Context, email string, password string) (*entity.AccessToken, error)
-	Me(c context.Context, accountID uint) (*entity.Account, error)
+	SignUp(ctx context.Context, account entity.Account) (*entity.AccessToken, error)
+	Login(ctx context.Context, email string, password string) (*entity.AccessToken, error)
+	Me(ctx context.Context, accountID uint) (*entity.Account, error)
 }
 
 type accountUsecase struct {
@@ -25,7 +25,7 @@ func NewAccountUsecase(accountRepository repository.AccountRepository) AccountUs
 	}
 }
 
-func (u *accountUsecase) SignUp(c context.Context, account entity.Account) (*entity.AccessToken, error) {
+func (u *accountUsecase) SignUp(_ context.Context, account entity.Account) (*entity.AccessToken, error) {
 	if err := u.accountRepository.CreateAccount(&account); err != nil {
 		log.Println(err.Error())
 		return nil, err
@@ -40,7 +40,7 @@ func (u *accountUsecase) SignUp(c context.Context, account entity.Account) (*ent
 	return token, nil
 }
 
-func (u *accountUsecase) Login(c context.Context, email string, password string) (*entity.AccessToken, error) {
+func (u *accountUsecase) Login(_ context.Context, email string, password string) (*entity.AccessToken, error) {
 	account, err := u.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		log.Println(err.Error())
@@ -61,7 +61,7 @@ func (u *accountUsecase) Login(c context.Context, email string, password string)
 	return token, nil
 }
 
-func (u *accountUsecase) Me(c context.Context, accountID uint) (*entity.Account, error) {
+func (u *accountUsecase) Me(_ context.Context, accountID uint) (*entity.Account, error) {
 	account, err := u.accountRepository.GetAccountById(accountID)
 	if err != nil {
 		log.Println(err.Error())
