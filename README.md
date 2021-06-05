@@ -1,4 +1,5 @@
-# JWT Server with Echo
+# JWT Server with gorilla/mux
+https://github.com/gorilla/mux 
 
 ## Getting Started
 ### Setup environment
@@ -20,19 +21,20 @@
 ```sh
 curl --location --request POST 'localhost:8888/signup' \
 --form 'email=test@sample.com' \
---form 'password=12345'
+--form 'password=test12345' \
+--form 'username=user1'
 ```
 
 ### POST /login
 ```sh
 curl --location --request POST 'localhost:8888/login' \
 --form 'email=test@sample.com' \
---form 'password=12345'
+--form 'password=test12345'
 
 ```
 
 ### POST /v1/me
 ```sh
 curl --location --request GET 'localhost:8888/v1/me' \
---header 'Cookie: Authorization={your_jwt_token}'
+--header 'Authorization: Bearer {your_jwt_token}'
 ```

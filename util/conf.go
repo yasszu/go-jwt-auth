@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"go-jwt-auth/env"
+	"go-jwt-auth/util/env"
 )
 
 var (
@@ -13,22 +13,32 @@ func init() {
 	conf.loadEnv()
 }
 
-// Configuration
+// Conf Configuration
 type Conf struct {
-	Server struct {
-		Port string
-		Host string
-	}
-	Postgres struct {
-		Host     string
-		Port     int
-		Username string
-		Password string
-		DB       string
-	}
-	JWT struct {
-		Secret string
-	}
+	Server
+	Postgres
+	JWT
+}
+
+type Server struct {
+	Port string
+	Host string
+}
+
+func (s Server) Addr() string {
+	return fmt.Sprintf("%s:%s", s.Host, s.Port)
+}
+
+type Postgres struct {
+	Host     string
+	Port     int
+	Username string
+	Password string
+	DB       string
+}
+
+type JWT struct {
+	Secret string
 }
 
 func NewConf() *Conf {
@@ -36,7 +46,6 @@ func NewConf() *Conf {
 }
 
 func (c *Conf) loadEnv() {
-	fmt.Println("load env...")
 	s := env.NewServer()
 	c.Server.Host = s.Host.Value
 	c.Server.Port = s.Port.Value
