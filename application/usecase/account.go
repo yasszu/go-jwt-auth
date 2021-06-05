@@ -28,13 +28,13 @@ func NewAccountUsecase(accountRepository repository.AccountRepository) AccountUs
 func (u *accountUsecase) SignUp(_ context.Context, account entity.Account) (*entity.AccessToken, error) {
 	if err := u.accountRepository.CreateAccount(&account); err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnexpectedError{Err: err}
 	}
 
 	token, err := jwt.Sign(&account)
 	if err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnexpectedError{Err: err}
 	}
 
 	return token, nil
@@ -44,18 +44,20 @@ func (u *accountUsecase) Login(_ context.Context, email string, password string)
 	account, err := u.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnexpectedError{Err: err}
 	}
 
 	if err = util.ComparePassword(account.PasswordHash, password); err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnauthorizedError{
+			Massage: "invalid password",
+		}
 	}
 
 	token, err := jwt.Sign(account)
 	if err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnexpectedError{Err: err}
 	}
 
 	return token, nil
@@ -65,7 +67,7 @@ func (u *accountUsecase) Me(_ context.Context, accountID uint) (*entity.Account,
 	account, err := u.accountRepository.GetAccountById(accountID)
 	if err != nil {
 		log.Println(err.Error())
-		return nil, err
+		return nil, &entity.UnexpectedError{Err: err}
 	}
 
 	return account, nil

@@ -17,19 +17,19 @@ func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := f.Validate(); err != nil {
-		response.Error(w, http.StatusBadRequest, err.Error())
+		response.Error(w, response.Status(err), err.Error())
 		return
 	}
 
 	account, err := f.Entity()
 	if err != nil {
-		response.Error(w, http.StatusBadRequest, err.Error())
+		response.Error(w, response.Status(err), err.Error())
 		return
 	}
 
 	token, err := h.accountUsecase.SignUp(r.Context(), account)
 	if err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, response.Status(err), err.Error())
 		return
 	}
 
@@ -43,7 +43,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
-		response.Error(w, http.StatusForbidden, "Invalid password")
+		response.Error(w, response.Status(err), err.Error())
 		return
 	}
 
@@ -60,7 +60,7 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 
 	account, err := h.accountUsecase.Me(r.Context(), accountID)
 	if err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, response.Status(err), err.Error())
 		return
 	}
 
