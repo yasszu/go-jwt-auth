@@ -75,6 +75,6 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 }
 
 func GetAccountID(ctx context.Context) (uint, bool) {
-	accountID, ok := ctx.Value(entity.ContextKeyAccountId).(uint)
+	accountID, ok := ctx.Value(entity.ContextKeyAccountID).(uint)
 	return accountID, ok
 }

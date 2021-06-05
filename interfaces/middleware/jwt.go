@@ -22,7 +22,7 @@ func (m *Middleware) JWT(next http.Handler) http.Handler {
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), entity.ContextKeyAccountId, claims.AccountID)
+			ctx := context.WithValue(r.Context(), entity.ContextKeyAccountID, claims.AccountID)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		} else {

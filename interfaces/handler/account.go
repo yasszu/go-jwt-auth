@@ -26,7 +26,7 @@ func NewAccountHandler(db *gorm.DB, accountRepository repository.AccountReposito
 	}
 }
 
-func (h *AccountHandler) Register(root *mux.Router, v1 *mux.Router) {
+func (h *AccountHandler) Register(root, v1 *mux.Router) {
 	root.HandleFunc("/signup", h.Signup).Methods("POST")
 	root.HandleFunc("/login", h.Login).Methods("POST")
 	v1.HandleFunc("/me", h.Me).Methods("GET")
@@ -51,7 +51,7 @@ func (h *AccountHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.accountUsecase.SignUp(r.Context(), account)
+	token, err := h.accountUsecase.SignUp(r.Context(), &account)
 	if err != nil {
 		response.Error(w, response.Status(err), err.Error())
 		return

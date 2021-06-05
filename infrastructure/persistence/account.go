@@ -23,7 +23,7 @@ func (r *AccountRepository) GetAccountByEmail(email string) (*entity.Account, er
 	return &account, err
 }
 
-func (r *AccountRepository) GetAccountById(id uint) (*entity.Account, error) {
+func (r *AccountRepository) GetAccountByID(id uint) (*entity.Account, error) {
 	var account entity.Account
 	err := r.db.First(&account, id).Error
 	return &account, err

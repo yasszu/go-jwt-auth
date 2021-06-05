@@ -10,8 +10,8 @@ import (
 )
 
 type AccountUsecase interface {
-	SignUp(ctx context.Context, account entity.Account) (*entity.AccessToken, error)
-	Login(ctx context.Context, email string, password string) (*entity.AccessToken, error)
+	SignUp(ctx context.Context, account *entity.Account) (*entity.AccessToken, error)
+	Login(ctx context.Context, email, password string) (*entity.AccessToken, error)
 	Me(ctx context.Context, accountID uint) (*entity.Account, error)
 }
 
@@ -25,13 +25,13 @@ func NewAccountUsecase(accountRepository repository.AccountRepository) AccountUs
 	}
 }
 
-func (u *accountUsecase) SignUp(_ context.Context, account entity.Account) (*entity.AccessToken, error) {
-	if err := u.accountRepository.CreateAccount(&account); err != nil {
+func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*entity.AccessToken, error) {
+	if err := u.accountRepository.CreateAccount(account); err != nil {
 		log.Println(err.Error())
 		return nil, &entity.UnexpectedError{Err: err}
 	}
 
-	token, err := jwt.Sign(&account)
+	token, err := jwt.Sign(account)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, &entity.UnexpectedError{Err: err}
@@ -40,7 +40,7 @@ func (u *accountUsecase) SignUp(_ context.Context, account entity.Account) (*ent
 	return token, nil
 }
 
-func (u *accountUsecase) Login(_ context.Context, email string, password string) (*entity.AccessToken, error) {
+func (u *accountUsecase) Login(_ context.Context, email, password string) (*entity.AccessToken, error) {
 	account, err := u.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		log.Println(err.Error())
@@ -64,7 +64,7 @@ func (u *accountUsecase) Login(_ context.Context, email string, password string)
 }
 
 func (u *accountUsecase) Me(_ context.Context, accountID uint) (*entity.Account, error) {
-	account, err := u.accountRepository.GetAccountById(accountID)
+	account, err := u.accountRepository.GetAccountByID(accountID)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, &entity.UnexpectedError{Err: err}
