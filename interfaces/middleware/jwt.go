@@ -2,13 +2,14 @@ package middleware
 
 import (
 	"context"
+	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/infrastructure/jwt"
 	"go-jwt-auth/interfaces/response"
 	"net/http"
 	"strings"
 )
 
-func JwtMiddleware(next http.Handler) http.Handler {
+func (m *Middleware) JWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		extractedToken := strings.Split(authHeader, "Bearer ")
@@ -21,7 +22,7 @@ func JwtMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), jwt.AccountIdKey, claims.AccountID)
+			ctx := context.WithValue(r.Context(), entity.ContextKeyAccountId, claims.AccountID)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		} else {

@@ -4,7 +4,7 @@ import (
 	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/util"
 
-	v "github.com/go-playground/validator/v10"
+	_validate "github.com/go-playground/validator/v10"
 )
 
 type Signup struct {
@@ -14,7 +14,7 @@ type Signup struct {
 }
 
 func (f Signup) Validate() error {
-	validate := v.New()
+	validate := _validate.New()
 	err := validate.Struct(f)
 	return err
 }

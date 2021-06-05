@@ -1,13 +1,15 @@
 package main
 
 import (
-	"go-jwt-auth/infrastructure/db"
-	"go-jwt-auth/interfaces/handler"
-	"go-jwt-auth/interfaces/middleware"
-	"go-jwt-auth/util"
 	"log"
 	"net/http"
 	"time"
+
+	"go-jwt-auth/infrastructure/db"
+	"go-jwt-auth/infrastructure/persistence"
+	"go-jwt-auth/interfaces/handler"
+	_middleware "go-jwt-auth/interfaces/middleware"
+	"go-jwt-auth/util"
 
 	"github.com/gorilla/mux"
 )
@@ -22,10 +24,19 @@ func main() {
 		panic(err.Error())
 	}
 
-	h := handler.NewHandler(conn)
 	r := mux.NewRouter()
-	r.Use(middleware.LoggingMiddleware)
-	h.Register(r)
+	middleware := _middleware.NewMiddleware()
+	root := r.PathPrefix("").Subrouter()
+	v1 := r.PathPrefix("/v1").Subrouter()
+	v1.Use(middleware.JWT)
+
+	accountRepository := persistence.NewAccountRepository(conn)
+
+	indexHandler := handler.NewIndexHandler(conn)
+	indexHandler.Register(root)
+
+	accountHandler := handler.NewAccountHandler(conn, accountRepository)
+	accountHandler.Register(root, v1)
 
 	srv := &http.Server{
 		Handler:      r,

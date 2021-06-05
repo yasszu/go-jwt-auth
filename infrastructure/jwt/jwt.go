@@ -3,9 +3,10 @@ package jwt
 import (
 	"context"
 	"errors"
-	"go-jwt-auth/domain/entity"
 	"os"
 	"time"
+
+	"go-jwt-auth/domain/entity"
 
 	jwtgo "github.com/dgrijalva/jwt-go"
 )
@@ -13,7 +14,6 @@ import (
 const (
 	expireHour   = 24 * 121
 	jwtSecretKey = "JWT_SECRET"
-	AccountIdKey = "AccountId"
 )
 
 var (
@@ -75,6 +75,6 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 }
 
 func GetAccountID(ctx context.Context) (uint, bool) {
-	accountID, ok := ctx.Value(AccountIdKey).(uint)
+	accountID, ok := ctx.Value(entity.ContextKeyAccountId).(uint)
 	return accountID, ok
 }
