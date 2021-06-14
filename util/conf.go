@@ -10,7 +10,7 @@ var (
 )
 
 func init() {
-	conf.loadEnv()
+	conf.load()
 }
 
 // Conf Configuration
@@ -45,18 +45,14 @@ func NewConf() *Conf {
 	return &conf
 }
 
-func (c *Conf) loadEnv() {
-	s := env.NewServer()
-	c.Server.Host = s.Host.Value
-	c.Server.Port = s.Port.Value
-
-	pg := env.NewPostgres()
-	c.Postgres.Host = pg.Host.Value
-	c.Postgres.Port = pg.Port.Int()
-	c.Postgres.Username = pg.User.Value
-	c.Postgres.Password = pg.Password.Value
-	c.Postgres.DB = pg.DB.Value
-
-	jwt := env.NewJWT()
-	c.JWT.Secret = jwt.Secret.Value
+func (c *Conf) load() {
+	v := env.NewVariables()
+	c.Server.Host = v.ServerHost.Value
+	c.Server.Port = v.ServerPort.Value
+	c.Postgres.Host = v.PostgresHost.Value
+	c.Postgres.Port = v.PostgresPort.Int()
+	c.Postgres.Username = v.PostgresUser.Value
+	c.Postgres.Password = v.PostgresPassword.Value
+	c.Postgres.DB = v.PostgresDB.Value
+	c.JWT.Secret = v.JWTSecret.Value
 }
