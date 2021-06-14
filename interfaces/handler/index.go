@@ -16,10 +16,10 @@ func NewIndexHandler(db *gorm.DB) *IndexHandler {
 	return &IndexHandler{db: db}
 }
 
-func (h IndexHandler) Register(root *mux.Router) {
-	root.HandleFunc("/", h.Index).Methods("GET")
-	root.HandleFunc("/healthy", h.Healthy).Methods("GET")
-	root.HandleFunc("/ready", h.Ready).Methods("GET")
+func (h IndexHandler) Register(r *mux.Router) {
+	r.HandleFunc("/", h.Index).Methods("GET")
+	r.HandleFunc("/healthy", h.Healthy).Methods("GET")
+	r.HandleFunc("/ready", h.Ready).Methods("GET")
 }
 
 // Index AccountHandler

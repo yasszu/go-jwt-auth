@@ -37,6 +37,7 @@ func main() {
 	accountRepository := persistence.NewAccountRepository(conn)
 	indexHandler := handler.NewIndexHandler(conn)
 	accountHandler := handler.NewAccountHandler(conn, accountRepository)
+	authenticationHandler := handler.NewAuthenticationHandler(conn, accountRepository)
 
 	r := mux.NewRouter()
 	r.Use(middleware.CORS)
@@ -47,7 +48,8 @@ func main() {
 	v1.Use(middleware.JWT)
 
 	indexHandler.Register(root)
-	accountHandler.Register(root, v1)
+	authenticationHandler.Register(root)
+	accountHandler.Register(v1)
 
 	srv := &http.Server{
 		Addr:         cnf.Server.Addr(),

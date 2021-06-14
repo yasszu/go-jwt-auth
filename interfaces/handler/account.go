@@ -6,7 +6,6 @@ import (
 	"go-jwt-auth/application/usecase"
 	"go-jwt-auth/domain/repository"
 	"go-jwt-auth/infrastructure/jwt"
-	"go-jwt-auth/interfaces/form"
 	"go-jwt-auth/interfaces/response"
 	"go-jwt-auth/interfaces/view"
 
@@ -26,52 +25,8 @@ func NewAccountHandler(db *gorm.DB, accountRepository repository.AccountReposito
 	}
 }
 
-func (h *AccountHandler) Register(root, v1 *mux.Router) {
-	root.HandleFunc("/signup", h.Signup).Methods("POST")
-	root.HandleFunc("/login", h.Login).Methods("POST")
-	v1.HandleFunc("/me", h.Me).Methods("GET")
-}
-
-// Signup POST /signup
-func (h *AccountHandler) Signup(w http.ResponseWriter, r *http.Request) {
-	f := form.Signup{
-		Username: r.FormValue("username"),
-		Email:    r.FormValue("email"),
-		Password: r.FormValue("password"),
-	}
-
-	if err := f.Validate(); err != nil {
-		response.Error(w, response.Status(err), err.Error())
-		return
-	}
-
-	account, err := f.Entity()
-	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
-		return
-	}
-
-	token, err := h.accountUsecase.SignUp(r.Context(), &account)
-	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
-		return
-	}
-
-	response.JSON(w, http.StatusOK, token)
-}
-
-// Login POST /login
-func (h *AccountHandler) Login(w http.ResponseWriter, r *http.Request) {
-	email := r.FormValue("email")
-	password := r.FormValue("password")
-
-	token, err := h.accountUsecase.Login(r.Context(), email, password)
-	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
-		return
-	}
-
-	response.JSON(w, http.StatusOK, token)
+func (h *AccountHandler) Register(r *mux.Router) {
+	r.HandleFunc("/me", h.Me).Methods("GET")
 }
 
 // Me  GET /v1/me
