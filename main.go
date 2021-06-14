@@ -33,19 +33,20 @@ func main() {
 		panic(err.Error())
 	}
 
-	r := mux.NewRouter()
-
 	middleware := _middleware.NewMiddleware()
+	accountRepository := persistence.NewAccountRepository(conn)
+	indexHandler := handler.NewIndexHandler(conn)
+	accountHandler := handler.NewAccountHandler(conn, accountRepository)
+
+	r := mux.NewRouter()
+	r.Use(middleware.CORS)
+	r.Use(middleware.Logging)
+
 	root := r.PathPrefix("").Subrouter()
 	v1 := r.PathPrefix("/v1").Subrouter()
 	v1.Use(middleware.JWT)
 
-	accountRepository := persistence.NewAccountRepository(conn)
-
-	indexHandler := handler.NewIndexHandler(conn)
 	indexHandler.Register(root)
-
-	accountHandler := handler.NewAccountHandler(conn, accountRepository)
 	accountHandler.Register(root, v1)
 
 	srv := &http.Server{
