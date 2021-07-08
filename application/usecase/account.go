@@ -5,7 +5,7 @@ import (
 	"go-jwt-auth/domain/entity"
 	"go-jwt-auth/domain/repository"
 	"go-jwt-auth/infrastructure/jwt"
-	"go-jwt-auth/util"
+	"go-jwt-auth/util/crypt"
 	"log"
 )
 
@@ -47,7 +47,7 @@ func (u *accountUsecase) Login(_ context.Context, email, password string) (*enti
 		return nil, &entity.UnexpectedError{Err: err}
 	}
 
-	if err = util.ComparePassword(account.PasswordHash, password); err != nil {
+	if err = crypt.ComparePassword(account.PasswordHash, password); err != nil {
 		log.Println(err)
 		return nil, &entity.UnauthorizedError{
 			Massage: "invalid password",

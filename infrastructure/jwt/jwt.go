@@ -3,7 +3,7 @@ package jwt
 import (
 	"context"
 	"errors"
-	"os"
+	"go-jwt-auth/util/conf"
 	"time"
 
 	"go-jwt-auth/domain/entity"
@@ -11,24 +11,11 @@ import (
 	jwtgo "github.com/dgrijalva/jwt-go"
 )
 
-const (
-	expireHour   = 24 * 121
-	jwtSecretKey = "JWT_SECRET"
-)
-
-var (
-	signingKey []byte
-)
+const expireHour = 24 * 121
 
 type CustomClaims struct {
 	AccountID uint `json:"account_id"`
 	jwtgo.StandardClaims
-}
-
-func init() {
-	_ = os.Setenv(jwtSecretKey, "b5a636fc-bd01-41b1-9780-7bbd906fa4c0")
-	secret := os.Getenv(jwtSecretKey)
-	signingKey = []byte(secret)
 }
 
 func Sign(account *entity.Account) (*entity.AccessToken, error) {
@@ -38,7 +25,7 @@ func Sign(account *entity.Account) (*entity.AccessToken, error) {
 		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiredAt.Unix()},
 	}
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
-	signedString, err := token.SignedString(signingKey)
+	signedString, err := token.SignedString(conf.JWT.SigningKey())
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +42,7 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 		signedToken,
 		&CustomClaims{},
 		func(token *jwtgo.Token) (interface{}, error) {
-			return signingKey, nil
+			return conf.JWT.SigningKey(), nil
 		},
 	)
 	if err != nil {
@@ -68,7 +55,7 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return nil, errors.New("JWT is expired")
+		return nil, errors.New("jWT is expired")
 	}
 
 	return claims, nil

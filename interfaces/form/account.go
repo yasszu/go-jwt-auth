@@ -2,7 +2,7 @@ package form
 
 import (
 	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/util"
+	"go-jwt-auth/util/crypt"
 
 	_validate "github.com/go-playground/validator/v10"
 )
@@ -21,7 +21,7 @@ func (f Signup) Validate() error {
 
 func (f Signup) Entity() (entity.Account, error) {
 	var e entity.Account
-	hash, err := util.GenerateBCryptoHash(f.Password)
+	hash, err := crypt.GenerateBCryptoHash(f.Password)
 	if err != nil {
 		return entity.Account{}, err
 	}
