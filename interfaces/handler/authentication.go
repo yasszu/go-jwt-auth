@@ -3,23 +3,20 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
-	"gorm.io/gorm"
-
 	"go-jwt-auth/application/usecase"
 	"go-jwt-auth/domain/repository"
 	"go-jwt-auth/interfaces/form"
 	"go-jwt-auth/interfaces/response"
+
+	"github.com/gorilla/mux"
 )
 
 type AuthenticationHandler struct {
-	db             *gorm.DB
 	accountUsecase usecase.AccountUsecase
 }
 
-func NewAuthenticationHandler(db *gorm.DB, accountRepository repository.AccountRepository) *AuthenticationHandler {
+func NewAuthenticationHandler(accountRepository repository.AccountRepository) *AuthenticationHandler {
 	return &AuthenticationHandler{
-		db:             db,
 		accountUsecase: usecase.NewAccountUsecase(accountRepository),
 	}
 }

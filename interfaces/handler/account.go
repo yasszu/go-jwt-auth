@@ -10,17 +10,14 @@ import (
 	"go-jwt-auth/interfaces/view"
 
 	"github.com/gorilla/mux"
-	"gorm.io/gorm"
 )
 
 type AccountHandler struct {
-	db             *gorm.DB
 	accountUsecase usecase.AccountUsecase
 }
 
-func NewAccountHandler(db *gorm.DB, accountRepository repository.AccountRepository) *AccountHandler {
+func NewAccountHandler(accountRepository repository.AccountRepository) *AccountHandler {
 	return &AccountHandler{
-		db:             db,
 		accountUsecase: usecase.NewAccountUsecase(accountRepository),
 	}
 }

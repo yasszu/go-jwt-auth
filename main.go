@@ -33,8 +33,8 @@ func main() {
 	middleware := _middleware.NewMiddleware()
 	accountRepository := persistence.NewAccountRepository(conn)
 	indexHandler := handler.NewIndexHandler(conn)
-	accountHandler := handler.NewAccountHandler(conn, accountRepository)
-	authenticationHandler := handler.NewAuthenticationHandler(conn, accountRepository)
+	accountHandler := handler.NewAccountHandler(accountRepository)
+	authenticationHandler := handler.NewAuthenticationHandler(accountRepository)
 
 	r := mux.NewRouter()
 	r.Use(middleware.CORS)
@@ -61,7 +61,7 @@ func main() {
 		log.Printf(" ⇨ http server started on %s", conf.Server.Addr())
 		log.Printf(" ⇨ graceful timeout: %s", wait)
 		if err = srv.ListenAndServe(); err != nil {
-			log.Println(err)
+			panic(err)
 		}
 	}()
 
