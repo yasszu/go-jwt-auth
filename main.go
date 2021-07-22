@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,10 +10,15 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/infrastructure/db"
 	"github.com/yasszu/go-jwt-auth/interfaces/handler"
 	"github.com/yasszu/go-jwt-auth/util/conf"
 )
+
+func init() {
+	log.SetLevel(log.DebugLevel)
+}
 
 func main() {
 	var wait time.Duration
@@ -41,8 +45,8 @@ func main() {
 
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
-		log.Printf(" ⇨ http server started on %s", conf.Server.Addr())
-		log.Printf(" ⇨ graceful timeout: %s", wait)
+		log.Infof(" ⇨ http server started on %s", conf.Server.Addr())
+		log.Infof(" ⇨ graceful timeout: %s", wait)
 		if err = srv.ListenAndServe(); err != nil {
 			panic(err)
 		}
@@ -55,12 +59,12 @@ func main() {
 
 	// Block until we receive our signal.
 	<-c
-	log.Println("received stop signal")
+	log.Info("received stop signal")
 
 	// Create a deadline to wait for.
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer func() {
-		log.Println("cancel")
+		log.Info("cancel")
 		cancel()
 	}()
 	// Doesn't block if no connections, but will otherwise wait
@@ -69,5 +73,5 @@ func main() {
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
-	log.Println("shutting down")
+	log.Info("shutting down")
 }
