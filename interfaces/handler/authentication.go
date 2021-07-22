@@ -7,8 +7,6 @@ import (
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/interfaces/form"
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
-
-	"github.com/gorilla/mux"
 )
 
 type AuthenticationHandler struct {
@@ -19,11 +17,6 @@ func NewAuthenticationHandler(accountRepository repository.AccountRepository) *A
 	return &AuthenticationHandler{
 		accountUsecase: usecase.NewAccountUsecase(accountRepository),
 	}
-}
-
-func (h *AuthenticationHandler) Register(r *mux.Router) {
-	r.HandleFunc("/signup", h.Signup).Methods("POST")
-	r.HandleFunc("/login", h.Login).Methods("POST")
 }
 
 // Signup POST /signup

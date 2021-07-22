@@ -5,7 +5,6 @@ import (
 
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
 
-	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -15,12 +14,6 @@ type IndexHandler struct {
 
 func NewIndexHandler(db *gorm.DB) *IndexHandler {
 	return &IndexHandler{db: db}
-}
-
-func (h IndexHandler) Register(r *mux.Router) {
-	r.HandleFunc("/", h.Index).Methods("GET")
-	r.HandleFunc("/healthy", h.Healthy).Methods("GET")
-	r.HandleFunc("/ready", h.Ready).Methods("GET")
 }
 
 // Index AccountHandler

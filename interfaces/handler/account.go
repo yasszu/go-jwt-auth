@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
@@ -18,10 +17,6 @@ func NewAccountHandler(accountRepository repository.AccountRepository) *AccountH
 	return &AccountHandler{
 		accountUsecase: usecase.NewAccountUsecase(accountRepository),
 	}
-}
-
-func (h *AccountHandler) Register(r *mux.Router) {
-	r.HandleFunc("/me", h.Me).Methods("GET")
 }
 
 // Me  GET /v1/me
