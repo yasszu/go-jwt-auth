@@ -1,4 +1,4 @@
-module go-jwt-auth
+module github.com/yasszu/go-jwt-auth
 
 go 1.16
 

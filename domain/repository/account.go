@@ -1,6 +1,6 @@
 package repository
 
-import "go-jwt-auth/domain/entity"
+import "github.com/yasszu/go-jwt-auth/domain/entity"
 
 type AccountRepository interface {
 	GetAccountByEmail(email string) (*entity.Account, error)

@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"go-jwt-auth/application/usecase"
-	"go-jwt-auth/domain/repository"
-	"go-jwt-auth/interfaces/form"
-	"go-jwt-auth/interfaces/response"
+	"github.com/yasszu/go-jwt-auth/application/usecase"
+	"github.com/yasszu/go-jwt-auth/domain/repository"
+	"github.com/yasszu/go-jwt-auth/interfaces/form"
+	"github.com/yasszu/go-jwt-auth/interfaces/response"
 
 	"github.com/gorilla/mux"
 )
@@ -35,19 +35,19 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := f.Validate(); err != nil {
-		response.Error(w, response.Status(err), err.Error())
+		response.Error(w, response.Status(err), err)
 		return
 	}
 
 	account, err := f.Entity()
 	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
+		response.Error(w, response.Status(err), err)
 		return
 	}
 
 	token, err := h.accountUsecase.SignUp(r.Context(), &account)
 	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
+		response.Error(w, response.Status(err), err)
 		return
 	}
 
@@ -61,7 +61,7 @@ func (h *AuthenticationHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
+		response.Error(w, response.Status(err), err)
 		return
 	}
 

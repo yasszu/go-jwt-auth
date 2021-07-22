@@ -2,11 +2,12 @@ package usecase
 
 import (
 	"context"
-	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/domain/repository"
-	"go-jwt-auth/infrastructure/jwt"
-	"go-jwt-auth/util/crypt"
 	"log"
+
+	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/domain/repository"
+	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
+	"github.com/yasszu/go-jwt-auth/util/crypt"
 )
 
 type AccountUsecase interface {

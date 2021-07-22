@@ -3,12 +3,11 @@ package jwt
 import (
 	"context"
 	"errors"
-	"go-jwt-auth/util/conf"
 	"time"
 
-	"go-jwt-auth/domain/entity"
-
 	jwtgo "github.com/dgrijalva/jwt-go"
+	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/util/conf"
 )
 
 const expireHour = 24 * 121

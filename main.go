@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"go-jwt-auth/util/conf"
 	"log"
 	"net/http"
 	"os"
@@ -11,12 +10,12 @@ import (
 	"syscall"
 	"time"
 
-	"go-jwt-auth/infrastructure/db"
-	"go-jwt-auth/infrastructure/persistence"
-	"go-jwt-auth/interfaces/handler"
-	_middleware "go-jwt-auth/interfaces/middleware"
-
 	"github.com/gorilla/mux"
+	"github.com/yasszu/go-jwt-auth/infrastructure/db"
+	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
+	"github.com/yasszu/go-jwt-auth/interfaces/handler"
+	_middleware "github.com/yasszu/go-jwt-auth/interfaces/middleware"
+	"github.com/yasszu/go-jwt-auth/util/conf"
 )
 
 func main() {
