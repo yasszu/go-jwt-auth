@@ -1,7 +1,7 @@
 package view
 
 import (
-	"go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/domain/entity"
 )
 
 type Account struct {

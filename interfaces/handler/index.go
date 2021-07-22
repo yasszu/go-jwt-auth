@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"go-jwt-auth/interfaces/response"
+	"github.com/yasszu/go-jwt-auth/interfaces/response"
 	"net/http"
 
 	"github.com/gorilla/mux"

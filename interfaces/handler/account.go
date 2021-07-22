@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"go-jwt-auth/application/usecase"
-	"go-jwt-auth/domain/repository"
-	"go-jwt-auth/infrastructure/jwt"
-	"go-jwt-auth/interfaces/response"
-	"go-jwt-auth/interfaces/view"
+	"github.com/yasszu/go-jwt-auth/application/usecase"
+	"github.com/yasszu/go-jwt-auth/domain/repository"
+	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
+	"github.com/yasszu/go-jwt-auth/interfaces/response"
+	"github.com/yasszu/go-jwt-auth/interfaces/view"
 
 	"github.com/gorilla/mux"
 )

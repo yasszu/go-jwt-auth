@@ -3,7 +3,7 @@ package response
 import (
 	"encoding/json"
 	"errors"
-	"go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"net/http"
 )
 

@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"context"
-	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/infrastructure/jwt"
-	"go-jwt-auth/interfaces/response"
 	"net/http"
 	"strings"
+
+	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
+	"github.com/yasszu/go-jwt-auth/interfaces/response"
 )
 
 func (m *Middleware) JWT(next http.Handler) http.Handler {

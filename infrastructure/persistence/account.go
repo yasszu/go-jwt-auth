@@ -1,13 +1,12 @@
 package persistence
 
 import (
-	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/domain/repository"
-
+	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"gorm.io/gorm"
 )
 
-var _ repository.AccountRepository = &AccountRepository{}
+var _ repository.AccountRepository = (*AccountRepository)(nil)
 
 type AccountRepository struct {
 	db *gorm.DB

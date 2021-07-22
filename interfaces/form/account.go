@@ -1,8 +1,8 @@
 package form
 
 import (
-	"go-jwt-auth/domain/entity"
-	"go-jwt-auth/util/crypt"
+	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/util/crypt"
 
 	_validate "github.com/go-playground/validator/v10"
 )
