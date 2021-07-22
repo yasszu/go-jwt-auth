@@ -12,9 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/yasszu/go-jwt-auth/infrastructure/db"
-	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
 	"github.com/yasszu/go-jwt-auth/interfaces/handler"
-	_middleware "github.com/yasszu/go-jwt-auth/interfaces/middleware"
 	"github.com/yasszu/go-jwt-auth/util/conf"
 )
 
@@ -29,23 +27,9 @@ func main() {
 		panic(err)
 	}
 
-	middleware := _middleware.NewMiddleware()
-	accountRepository := persistence.NewAccountRepository(conn)
-	indexHandler := handler.NewIndexHandler(conn)
-	accountHandler := handler.NewAccountHandler(accountRepository)
-	authenticationHandler := handler.NewAuthenticationHandler(accountRepository)
-
 	r := mux.NewRouter()
-	r.Use(middleware.CORS)
-	r.Use(middleware.Logging)
-
-	root := r.PathPrefix("").Subrouter()
-	v1 := r.PathPrefix("/v1").Subrouter()
-	v1.Use(middleware.JWT)
-
-	indexHandler.Register(root)
-	authenticationHandler.Register(root)
-	accountHandler.Register(v1)
+	h := handler.NewHandler(conn)
+	h.Register(r)
 
 	srv := &http.Server{
 		Addr:         conf.Server.Addr(),
