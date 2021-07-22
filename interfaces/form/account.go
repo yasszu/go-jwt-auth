@@ -20,13 +20,14 @@ func (f Signup) Validate() error {
 }
 
 func (f Signup) Entity() (entity.Account, error) {
-	var e entity.Account
 	hash, err := crypt.GenerateBCryptoHash(f.Password)
 	if err != nil {
 		return entity.Account{}, err
 	}
-	e.Username = f.Username
-	e.Email = f.Email
-	e.PasswordHash = hash
-	return entity.Account{}, err
+
+	return entity.Account{
+		Username:     f.Username,
+		Email:        f.Email,
+		PasswordHash: hash,
+	}, nil
 }
