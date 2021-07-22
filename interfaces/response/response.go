@@ -3,8 +3,10 @@ package response
 import (
 	"encoding/json"
 	"errors"
-	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"fmt"
 	"net/http"
+
+	"github.com/yasszu/go-jwt-auth/domain/entity"
 )
 
 func JSON(w http.ResponseWriter, code int, payload interface{}) {
@@ -14,9 +16,9 @@ func JSON(w http.ResponseWriter, code int, payload interface{}) {
 	_, _ = w.Write(response)
 }
 
-func Error(w http.ResponseWriter, code int, message string) {
+func Error(w http.ResponseWriter, code int, message interface{}) {
 	JSON(w, code, map[string]string{
-		"error": message,
+		"error": fmt.Sprint(message),
 	})
 }
 
@@ -26,16 +28,21 @@ func OK(w http.ResponseWriter) {
 	})
 }
 
+var (
+	errUnexpected   *entity.UnexpectedError
+	errNotFound     *entity.NotFoundError
+	errUnauthorized *entity.UnauthorizedError
+)
+
 func Status(err error) int {
-	if errors.Is(err, &entity.UnexpectedError{}) {
+	if errors.As(err, &errUnexpected) {
 		return http.StatusInternalServerError
 	}
-	if errors.Is(err, &entity.NotFoundError{}) {
+	if errors.As(err, &errNotFound) {
 		return http.StatusNotFound
 	}
-	if errors.Is(err, &entity.UnauthorizedError{}) {
+	if errors.As(err, &errUnauthorized) {
 		return http.StatusUnauthorized
 	}
-
 	return http.StatusInternalServerError
 }

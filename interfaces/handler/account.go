@@ -3,13 +3,11 @@ package handler
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
-	"github.com/yasszu/go-jwt-auth/interfaces/view"
-
-	"github.com/gorilla/mux"
 )
 
 type AccountHandler struct {
@@ -36,9 +34,9 @@ func (h *AccountHandler) Me(w http.ResponseWriter, r *http.Request) {
 
 	account, err := h.accountUsecase.Me(r.Context(), accountID)
 	if err != nil {
-		response.Error(w, response.Status(err), err.Error())
+		response.Error(w, response.Status(err), err)
 		return
 	}
 
-	response.JSON(w, http.StatusOK, view.NewAccount(account))
+	response.JSON(w, http.StatusOK, account.Response())
 }
