@@ -11,8 +11,9 @@ import (
 )
 
 type AccountUsecase interface {
-	SignUp(ctx context.Context, account *entity.Account) (*entity.AccessToken, error)
-	Login(ctx context.Context, email, password string) (*entity.AccessToken, error)
+	SignUp(ctx context.Context, account *entity.Account) (*entity.TokenPair, error)
+	Login(ctx context.Context, email, password string) (*entity.TokenPair, error)
+	RefreshToken(ctx context.Context, refreshToken string) (*entity.TokenPair, error)
 	Me(ctx context.Context, accountID uint) (*entity.Account, error)
 }
 
@@ -26,22 +27,31 @@ func NewAccountUsecase(accountRepository repository.AccountRepository) AccountUs
 	}
 }
 
-func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*entity.AccessToken, error) {
+func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*entity.TokenPair, error) {
 	if err := u.accountRepository.CreateAccount(account); err != nil {
 		log.Error(err)
 		return nil, &entity.UnexpectedError{Err: err}
 	}
 
-	token, err := jwt.Sign(account)
+	accessToken, err := jwt.GenerateAccessToken(account)
 	if err != nil {
 		log.Error(err)
 		return nil, &entity.UnexpectedError{Err: err}
 	}
 
-	return token, nil
+	refreshToken, err := jwt.GenerateRefreshToken(account)
+	if err != nil {
+		log.Error(err)
+		return nil, &entity.UnexpectedError{Err: err}
+	}
+
+	return &entity.TokenPair{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
 
-func (u *accountUsecase) Login(_ context.Context, email, password string) (*entity.AccessToken, error) {
+func (u *accountUsecase) Login(_ context.Context, email, password string) (*entity.TokenPair, error) {
 	account, err := u.accountRepository.GetAccountByEmail(email)
 	if err != nil {
 		log.Error(err)
@@ -55,13 +65,52 @@ func (u *accountUsecase) Login(_ context.Context, email, password string) (*enti
 		}
 	}
 
-	token, err := jwt.Sign(account)
+	accessToken, err := jwt.GenerateAccessToken(account)
 	if err != nil {
 		log.Error(err)
 		return nil, &entity.UnexpectedError{Err: err}
 	}
 
-	return token, nil
+	refreshToken, err := jwt.GenerateRefreshToken(account)
+	if err != nil {
+		log.Error(err)
+		return nil, &entity.UnexpectedError{Err: err}
+	}
+
+	return &entity.TokenPair{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+func (u *accountUsecase) RefreshToken(ctx context.Context, refreshToken string) (*entity.TokenPair, error) {
+	claims, err := jwt.ValidateRefreshToken(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	account, err := u.accountRepository.GetAccountByID(claims.AccountID)
+	if err != nil {
+		log.Error(err)
+		return nil, &entity.UnexpectedError{Err: err}
+	}
+
+	newAccessToken, err := jwt.GenerateAccessToken(account)
+	if err != nil {
+		log.Error(err)
+		return nil, &entity.UnexpectedError{Err: err}
+	}
+
+	newRefreshToken, err := jwt.GenerateRefreshToken(account)
+	if err != nil {
+		log.Error(err)
+		return nil, &entity.UnexpectedError{Err: err}
+	}
+
+	return &entity.TokenPair{
+		AccessToken:  newAccessToken,
+		RefreshToken: newRefreshToken,
+	}, nil
 }
 
 func (u *accountUsecase) Me(_ context.Context, accountID uint) (*entity.Account, error) {

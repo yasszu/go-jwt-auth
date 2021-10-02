@@ -39,6 +39,7 @@ func (h *Handler) Register(r *mux.Router) {
 	root.HandleFunc("/ready", h.Ready).Methods("GET")
 	root.HandleFunc("/signup", h.Signup).Methods("POST")
 	root.HandleFunc("/login", h.Login).Methods("POST")
+	root.HandleFunc("/token", h.RefreshToken).Methods("POST")
 
 	v1 := r.PathPrefix("/v1").Subrouter()
 	v1.Use(h.middleware.Logging)

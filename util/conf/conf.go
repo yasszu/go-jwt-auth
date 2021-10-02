@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+
 	"github.com/yasszu/go-jwt-auth/util/env"
 )
 
@@ -25,7 +26,8 @@ func init() {
 		DB:       v.PostgresDB.Value,
 	}
 	JWT = &jWT{
-		Secret: v.JWTSecret.Value,
+		AccessTokenSecret:  v.JWTAccessTokenSecret.Value,
+		RefreshTokenSecret: v.JWTRefreshTokenSecret.Value,
 	}
 }
 
@@ -56,9 +58,14 @@ func (p postgres) DSN() string {
 }
 
 type jWT struct {
-	Secret string
+	AccessTokenSecret  string
+	RefreshTokenSecret string
 }
 
-func (j jWT) SigningKey() []byte {
-	return []byte(j.Secret)
+func (j jWT) AccessTokenSigningKey() []byte {
+	return []byte(j.AccessTokenSecret)
+}
+
+func (j jWT) RefreshTokenSigningKey() []byte {
+	return []byte(j.RefreshTokenSecret)
 }

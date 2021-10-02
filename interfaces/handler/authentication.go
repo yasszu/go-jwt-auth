@@ -38,13 +38,13 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.accountUsecase.SignUp(r.Context(), &account)
+	tokenPair, err := h.accountUsecase.SignUp(r.Context(), &account)
 	if err != nil {
 		response.Error(w, response.Status(err), err)
 		return
 	}
 
-	response.JSON(w, http.StatusOK, token)
+	response.JSON(w, http.StatusOK, response.NewTokenResponse(tokenPair))
 }
 
 // Login POST /login
@@ -52,11 +52,23 @@ func (h *AuthenticationHandler) Login(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	token, err := h.accountUsecase.Login(r.Context(), email, password)
+	tokenPair, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
 		response.Error(w, response.Status(err), err)
 		return
 	}
 
-	response.JSON(w, http.StatusOK, token)
+	response.JSON(w, http.StatusOK, response.NewTokenResponse(tokenPair))
+}
+
+func (h *AuthenticationHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
+	refreshToken := r.FormValue("refresh_token")
+
+	tokenPair, err := h.accountUsecase.RefreshToken(r.Context(), refreshToken)
+	if err != nil {
+		response.Error(w, response.Status(err), err)
+		return
+	}
+
+	response.JSON(w, http.StatusOK, response.NewTokenResponse(tokenPair))
 }

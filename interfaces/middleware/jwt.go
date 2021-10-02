@@ -17,7 +17,7 @@ func (m *Middleware) JWT(next http.Handler) http.Handler {
 		if len(extractedToken) == 2 {
 			token := strings.TrimSpace(extractedToken[1])
 
-			claims, err := jwt.ValidateToken(token)
+			claims, err := jwt.ValidateAccessToken(token)
 			if err != nil {
 				response.Error(w, http.StatusForbidden, "Forbidden")
 				return

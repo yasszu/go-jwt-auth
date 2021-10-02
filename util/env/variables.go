@@ -1,14 +1,15 @@
 package env
 
 type Variables struct {
-	PostgresHost     Env
-	PostgresPort     Env
-	PostgresUser     Env
-	PostgresPassword Env
-	PostgresDB       Env
-	ServerHost       Env
-	ServerPort       Env
-	JWTSecret        Env
+	PostgresHost          Env
+	PostgresPort          Env
+	PostgresUser          Env
+	PostgresPassword      Env
+	PostgresDB            Env
+	ServerHost            Env
+	ServerPort            Env
+	JWTAccessTokenSecret  Env
+	JWTRefreshTokenSecret Env
 }
 
 func NewVariables() Variables {
@@ -41,9 +42,13 @@ func NewVariables() Variables {
 			Key:   "SERVER_PORT",
 			Value: "8888",
 		},
-		JWTSecret: Env{
-			Key:   "JWT_SECRET",
-			Value: "your_secret_key",
+		JWTAccessTokenSecret: Env{
+			Key:   "JWT_ACCESS_TOKEN_SECRET",
+			Value: "your_access_token_secret_key",
+		},
+		JWTRefreshTokenSecret: Env{
+			Key:   "JWT_REFRESH_TOKEN_SECRET",
+			Value: "your_access_refresh_secret_key",
 		},
 	}
 	v.load()
@@ -58,5 +63,6 @@ func (v *Variables) load() {
 	v.PostgresDB.Load()
 	v.ServerHost.Load()
 	v.ServerPort.Load()
-	v.JWTSecret.Load()
+	v.JWTAccessTokenSecret.Load()
+	v.JWTRefreshTokenSecret.Load()
 }
