@@ -33,9 +33,9 @@ curl --location --request POST 'localhost:8888/login' \
 
 ```
 
-### POST /token
+### POST /refresh_token
 ```sh
-curl --location --request POST 'localhost:8888/token' \
+curl --location --request POST 'localhost:8888/refresh_token' \
 --form 'refresh_token={refresh_token}'
 ```
 

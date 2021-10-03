@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	accessTokenExpireTime  = 1 * time.Hour
+	accessTokenExpireTime  = 15 * time.Minute
 	refreshTokenExpireTime = 168 * time.Hour
 )
 
@@ -21,34 +21,22 @@ type CustomClaims struct {
 }
 
 func GenerateAccessToken(account *entity.Account) (*entity.AccessToken, error) {
-	expiredAt := time.Now().Add(accessTokenExpireTime)
-	claims := &CustomClaims{
-		AccountID:      account.ID,
-		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiredAt.Unix()},
-	}
-	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
-
-	signedString, err := token.SignedString(conf.JWT.AccessTokenSigningKey())
-	if err != nil {
-		return nil, err
-	}
-
-	return &entity.AccessToken{
-		AccountID: account.ID,
-		Token:     signedString,
-		ExpiresAt: expiredAt,
-	}, nil
+	return generateToken(account, accessTokenExpireTime, conf.JWT.AccessTokenSigningKey())
 }
 
 func GenerateRefreshToken(account *entity.Account) (*entity.AccessToken, error) {
-	expiredAt := time.Now().Add(refreshTokenExpireTime)
+	return generateToken(account, refreshTokenExpireTime, conf.JWT.RefreshTokenSigningKey())
+}
+
+func generateToken(account *entity.Account, expiresTime time.Duration, secret []byte) (*entity.AccessToken, error) {
+	expiredAt := time.Now().Add(expiresTime)
 	claims := &CustomClaims{
 		AccountID:      account.ID,
 		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiredAt.Unix()},
 	}
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
 
-	signedString, err := token.SignedString(conf.JWT.RefreshTokenSigningKey())
+	signedString, err := token.SignedString(secret)
 	if err != nil {
 		return nil, err
 	}
@@ -61,35 +49,19 @@ func GenerateRefreshToken(account *entity.Account) (*entity.AccessToken, error) 
 }
 
 func ValidateAccessToken(signedToken string) (*CustomClaims, error) {
-	token, err := jwtgo.ParseWithClaims(
-		signedToken,
-		&CustomClaims{},
-		func(token *jwtgo.Token) (interface{}, error) {
-			return conf.JWT.AccessTokenSigningKey(), nil
-		},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	claims, ok := token.Claims.(*CustomClaims)
-	if !ok {
-		return nil, errors.New("couldn't parse claims")
-	}
-
-	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return nil, errors.New("jWT is expired")
-	}
-
-	return claims, nil
+	return validateToken(signedToken, conf.JWT.AccessTokenSigningKey())
 }
 
 func ValidateRefreshToken(signedToken string) (*CustomClaims, error) {
+	return validateToken(signedToken, conf.JWT.RefreshTokenSigningKey())
+}
+
+func validateToken(signedToken string, secret []byte) (*CustomClaims, error) {
 	token, err := jwtgo.ParseWithClaims(
 		signedToken,
 		&CustomClaims{},
 		func(token *jwtgo.Token) (interface{}, error) {
-			return conf.JWT.RefreshTokenSigningKey(), nil
+			return secret, nil
 		},
 	)
 	if err != nil {
