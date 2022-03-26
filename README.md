@@ -2,14 +2,6 @@
 https://github.com/gorilla/mux 
 
 ## Getting Started
-### Setup environment
-1. Install direnv and [set hook at your shell](https://github.com/direnv/direnv/blob/master/docs/hook.md).
-    ```
-    $ brew install direnv
-    $ echo export JWT_SECRET="{your_cecret_key}" > .envrc
-    $ direnv allow .
-    ```
-    
 ### Run Server
 1. Run containers
     ```

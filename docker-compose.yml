@@ -7,18 +7,26 @@ services:
     environment:
       POSTGRES_PASSWORD: password
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - "8080:8080"
   api:
     build: .
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8888
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+      - JWT_ACCESS_TOKEN_SECRET=b5a636fc-bd01-41b1-9780-7bbd906fa4c0
+      - JWT_REFRESH_TOKEN_SECRET=Vx_7F6r9WX9iCuoQCPtCbUiv_
     ports:
       - "8888:8888"
     volumes:
       - .:/go/src/app
-    env_file:
-      - config/.env
