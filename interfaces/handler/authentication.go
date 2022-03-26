@@ -3,13 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/yasszu/go-jwt-auth/interfaces/response"
-
-	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
-
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/interfaces/form"
+	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
+	"github.com/yasszu/go-jwt-auth/interfaces/response"
 )
 
 type AuthenticationHandler struct {
