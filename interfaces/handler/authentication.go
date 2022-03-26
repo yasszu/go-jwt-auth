@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
+	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
+
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/interfaces/form"
-	"github.com/yasszu/go-jwt-auth/interfaces/response"
 )
 
 type AuthenticationHandler struct {
@@ -28,23 +29,23 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := f.Validate(); err != nil {
-		response.Error(w, response.Status(err), err)
+		presenter.Error(w, presenter.Status(err), err)
 		return
 	}
 
 	account, err := f.Entity()
 	if err != nil {
-		response.Error(w, response.Status(err), err)
+		presenter.Error(w, presenter.Status(err), err)
 		return
 	}
 
 	token, err := h.accountUsecase.SignUp(r.Context(), &account)
 	if err != nil {
-		response.Error(w, response.Status(err), err)
+		presenter.Error(w, presenter.Status(err), err)
 		return
 	}
 
-	response.JSON(w, http.StatusOK, token)
+	presenter.JSON(w, http.StatusOK, token)
 }
 
 // Login POST /login
@@ -54,9 +55,9 @@ func (h *AuthenticationHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
-		response.Error(w, response.Status(err), err)
+		presenter.Error(w, presenter.Status(err), err)
 		return
 	}
 
-	response.JSON(w, http.StatusOK, token)
+	presenter.JSON(w, http.StatusOK, token)
 }

@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
+
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
-	"github.com/yasszu/go-jwt-auth/interfaces/response"
 )
 
 func (m *Middleware) JWT(next http.Handler) http.Handler {
@@ -19,7 +20,7 @@ func (m *Middleware) JWT(next http.Handler) http.Handler {
 
 			claims, err := jwt.ValidateToken(token)
 			if err != nil {
-				response.Error(w, http.StatusForbidden, "Forbidden")
+				presenter.Error(w, http.StatusForbidden, "Forbidden")
 				return
 			}
 
@@ -27,7 +28,7 @@ func (m *Middleware) JWT(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		} else {
-			response.Error(w, http.StatusForbidden, "Forbidden")
+			presenter.Error(w, http.StatusForbidden, "Forbidden")
 			return
 		}
 	})
