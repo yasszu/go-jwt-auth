@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/gorilla/mux"
 	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
-	_middleware "github.com/yasszu/go-jwt-auth/interfaces/middleware"
+	"github.com/yasszu/go-jwt-auth/interfaces/middleware"
 	"gorm.io/gorm"
 )
 
@@ -11,12 +11,9 @@ type Handler struct {
 	*IndexHandler
 	*AccountHandler
 	*AuthenticationHandler
-
-	middleware *_middleware.Middleware
 }
 
 func NewHandler(db *gorm.DB) *Handler {
-	middleware := _middleware.NewMiddleware()
 	accountRepository := persistence.NewAccountRepository(db)
 	indexHandler := NewIndexHandler(db)
 	accountHandler := NewAccountHandler(accountRepository)
@@ -26,14 +23,13 @@ func NewHandler(db *gorm.DB) *Handler {
 		IndexHandler:          indexHandler,
 		AccountHandler:        accountHandler,
 		AuthenticationHandler: authenticationHandler,
-		middleware:            middleware,
 	}
 }
 
 func (h *Handler) Register(r *mux.Router) {
 	root := r.PathPrefix("").Subrouter()
-	root.Use(h.middleware.Logging)
-	root.Use(h.middleware.CORS)
+	root.Use(middleware.Logging)
+	root.Use(middleware.CORS)
 	root.HandleFunc("/", h.Index).Methods("GET")
 	root.HandleFunc("/healthy", h.Healthy).Methods("GET")
 	root.HandleFunc("/ready", h.Ready).Methods("GET")
@@ -41,7 +37,7 @@ func (h *Handler) Register(r *mux.Router) {
 	root.HandleFunc("/login", h.Login).Methods("POST")
 
 	v1 := r.PathPrefix("/v1").Subrouter()
-	v1.Use(h.middleware.Logging)
-	v1.Use(h.middleware.JWT)
+	v1.Use(middleware.Logging)
+	v1.Use(middleware.JWT)
 	v1.HandleFunc("/me", h.Me).Methods("GET")
 }

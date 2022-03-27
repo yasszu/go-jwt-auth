@@ -5,7 +5,7 @@ import (
 
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
-	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
+	"github.com/yasszu/go-jwt-auth/interfaces/middleware"
 	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
 )
@@ -22,7 +22,7 @@ func NewAccountHandler(accountRepository repository.AccountRepository) *AccountH
 
 // Me  GET /v1/me
 func (h *AccountHandler) Me(w http.ResponseWriter, r *http.Request) {
-	accountID, ok := jwt.GetAccountID(r.Context())
+	accountID, ok := middleware.GetAccountID(r.Context())
 	if !ok {
 		presenter.Error(w, http.StatusUnauthorized, "Unauthorized")
 		return

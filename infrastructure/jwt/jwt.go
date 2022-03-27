@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"context"
 	"errors"
 	"time"
 
@@ -58,9 +57,4 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 	}
 
 	return claims, nil
-}
-
-func GetAccountID(ctx context.Context) (uint, bool) {
-	accountID, ok := ctx.Value(entity.ContextKeyAccountID).(uint)
-	return accountID, ok
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/rs/cors"
 )
 
-func (m *Middleware) CORS(next http.Handler) http.Handler {
+func CORS(next http.Handler) http.Handler {
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{
