@@ -1,4 +1,4 @@
-package entity
+package usecase
 
 type UnexpectedError struct {
 	Err error
@@ -13,7 +13,7 @@ type NotFoundError struct {
 }
 
 func (e *NotFoundError) Error() string {
-	return e.Name + ": not found"
+	return "not found " + e.Name
 }
 
 type UnauthorizedError struct {

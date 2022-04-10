@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/yasszu/go-jwt-auth/domain/entity"
+	"github.com/yasszu/go-jwt-auth/application/usecase"
 )
 
 func JSON(w http.ResponseWriter, code int, payload interface{}) {
@@ -29,20 +29,20 @@ func OK(w http.ResponseWriter) {
 }
 
 var (
-	errUnexpected   *entity.UnexpectedError
-	errNotFound     *entity.NotFoundError
-	errUnauthorized *entity.UnauthorizedError
+	errUnexpected   *usecase.UnexpectedError
+	errNotFound     *usecase.NotFoundError
+	errUnauthorized *usecase.UnauthorizedError
 )
 
 func Status(err error) int {
-	if errors.As(err, &errUnexpected) {
+	switch {
+	case errors.As(err, &errUnexpected):
+		return http.StatusInternalServerError
+	case errors.As(err, &errNotFound):
+		return http.StatusNotFound
+	case errors.As(err, &errUnauthorized):
+		return http.StatusUnauthorized
+	default:
 		return http.StatusInternalServerError
 	}
-	if errors.As(err, &errNotFound) {
-		return http.StatusNotFound
-	}
-	if errors.As(err, &errUnauthorized) {
-		return http.StatusUnauthorized
-	}
-	return http.StatusInternalServerError
 }
