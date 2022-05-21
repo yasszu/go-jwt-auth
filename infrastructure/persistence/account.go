@@ -6,8 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var _ repository.AccountRepository = (*AccountRepository)(nil)
-
 type AccountRepository struct {
 	db *gorm.DB
 }
@@ -16,26 +14,41 @@ func NewAccountRepository(db *gorm.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }
 
+var _ repository.AccountRepository = (*AccountRepository)(nil)
+
 func (r *AccountRepository) GetAccountByEmail(email string) (*entity.Account, error) {
 	var account entity.Account
-	err := r.db.Where("email = ?", email).First(&account).Error
-	return &account, err
+	if err := r.db.Where("email = ?", email).First(&account).Error; err != nil {
+		return nil, err
+	}
+	return &account, nil
 }
 
 func (r *AccountRepository) GetAccountByID(id uint) (*entity.Account, error) {
 	var account entity.Account
-	err := r.db.First(&account, id).Error
-	return &account, err
+	if err := r.db.First(&account, id).Error; err != nil {
+		return nil, err
+	}
+	return &account, nil
 }
 
 func (r *AccountRepository) CreateAccount(account *entity.Account) error {
-	return r.db.Create(account).Error
+	if err := r.db.Create(account).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *AccountRepository) UpdateAccount(account *entity.Account) error {
-	return r.db.Save(account).Error
+	if err := r.db.Save(account).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *AccountRepository) DeleteAccount(accountID uint) error {
-	return r.db.Delete(&entity.Account{}, accountID).Error
+	if err := r.db.Delete(&entity.Account{}, accountID).Error; err != nil {
+		return err
+	}
+	return nil
 }
