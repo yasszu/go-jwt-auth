@@ -8,7 +8,8 @@ import (
 )
 
 func NewConn() (*gorm.DB, error) {
-	return openDB(conf.Postgres.DSN())
+	dns := conf.Postgres.DSN()
+	return openDB(dns)
 }
 
 func openDB(dsn string) (*gorm.DB, error) {

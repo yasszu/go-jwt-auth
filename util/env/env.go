@@ -1,23 +1,17 @@
 package env
 
 import (
-	"os"
 	"strconv"
 )
 
-type Env struct {
-	Key   string
-	Value string
+type Env string
+
+func (e Env) String() string {
+	return string(e)
 }
 
-func (env *Env) Load() {
-	if v, ok := os.LookupEnv(env.Key); ok {
-		env.Value = v
-	}
-}
-
-func (env Env) Int() int {
-	i, err := strconv.Atoi(env.Value)
+func (e Env) Int() int {
+	i, err := strconv.Atoi(string(e))
 	if err != nil {
 		return 0
 	}

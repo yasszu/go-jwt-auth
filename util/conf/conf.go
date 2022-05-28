@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+
 	"github.com/yasszu/go-jwt-auth/util/env"
 )
 
@@ -14,18 +15,18 @@ var (
 func init() {
 	v := env.NewVariables()
 	Server = &server{
-		Host: v.ServerHost.Value,
-		Port: v.ServerPort.Value,
+		Host: v.ServerHost.String(),
+		Port: v.ServerPort.String(),
 	}
 	Postgres = &postgres{
-		Host:     v.PostgresHost.Value,
+		Host:     v.PostgresHost.String(),
 		Port:     v.PostgresPort.Int(),
-		Username: v.PostgresUser.Value,
-		Password: v.PostgresPassword.Value,
-		DB:       v.PostgresDB.Value,
+		Username: v.PostgresUser.String(),
+		Password: v.PostgresPassword.String(),
+		DB:       v.PostgresDB.String(),
 	}
 	JWT = &jWT{
-		Secret: v.JWTSecret.Value,
+		Secret: v.JWTSecret.String(),
 	}
 }
 
