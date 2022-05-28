@@ -11,7 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/yasszu/go-jwt-auth/infrastructure/db"
+	"github.com/yasszu/go-jwt-auth/infrastructure/postgres"
 	"github.com/yasszu/go-jwt-auth/interfaces/handler"
 	"github.com/yasszu/go-jwt-auth/util/conf"
 )
@@ -26,7 +26,7 @@ func main() {
 	flag.Parse()
 
 	// Establish DB connection
-	conn, err := db.NewConn()
+	conn, err := postgres.NewConn()
 	if err != nil {
 		panic(err)
 	}
