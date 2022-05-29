@@ -5,12 +5,12 @@ https://github.com/gorilla/mux
 ### Run Server
 1. Run containers
     ```shell
-    docker-compose up
+    docker compose up
     ```
 
 ## API
 ### POST /signup
-```sh
+```shell
 curl --location --request POST 'localhost:8888/signup' \
 --form 'email=test@sample.com' \
 --form 'password=test12345' \
@@ -26,7 +26,7 @@ curl --location --request POST 'localhost:8888/login' \
 ```
 
 ### POST /v1/me
-```sh
+```shell
 curl --location --request GET 'localhost:8888/v1/me' \
 --header 'Authorization: Bearer {your_jwt_token}'
 ```
