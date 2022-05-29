@@ -6,14 +6,14 @@ import (
 )
 
 type Variables struct {
-	PostgresHost     Env `env:"POSTGRES_HOST"`
-	PostgresPort     Env `env:"POSTGRES_PORT"`
-	PostgresUser     Env `env:"POSTGRES_USER"`
-	PostgresPassword Env `env:"POSTGRES_PASSWORD"`
-	PostgresDB       Env `env:"POSTGRES_DB"`
-	ServerHost       Env `env:"SERVER_HOST"`
-	ServerPort       Env `env:"SERVER_PORT"`
-	JWTSecret        Env `env:"JWT_SECRET"`
+	MysqlHost     Env `env:"MYSQL_HOST"`
+	MysqlPort     Env `env:"MYSQL_PORT"`
+	MysqlUser     Env `env:"MYSQL_USER"`
+	MysqlPassword Env `env:"MYSQL_PASSWORD"`
+	MysqlDB       Env `env:"MYSQL_DB"`
+	ServerHost    Env `env:"SERVER_HOST"`
+	ServerPort    Env `env:"SERVER_PORT"`
+	JWTSecret     Env `env:"JWT_SECRET"`
 }
 
 func NewVariables() Variables {

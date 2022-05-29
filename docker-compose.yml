@@ -2,31 +2,35 @@
 version: '3.9'
 
 services:
-  postgres:
-    image: postgres
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      POSTGRES_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: gojwtauth
+      MYSQL_USER: server
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
-  adminer:
-    image: adminer
-    ports:
-      - "8080:8080"
-  api:
+
+  server:
     build: .
     environment:
       - SERVER_HOST=0.0.0.0
       - SERVER_PORT=8888
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=server
+      - MYSQL_PASSWORD=password
+      - MYSQL_DB=gojwtauth
       - JWT_ACCESS_TOKEN_SECRET=b5a636fc-bd01-41b1-9780-7bbd906fa4c0
       - JWT_REFRESH_TOKEN_SECRET=Vx_7F6r9WX9iCuoQCPtCbUiv_
     ports:
       - "8888:8888"
     volumes:
       - .:/go/src/app
+    depends_on:
+      - mysql

@@ -4,8 +4,8 @@ https://github.com/gorilla/mux
 ## Getting Started
 ### Run Server
 1. Run containers
-    ```
-    $ docker-compose up
+    ```shell
+    docker-compose up
     ```
 
 ## API
@@ -18,7 +18,7 @@ curl --location --request POST 'localhost:8888/signup' \
 ```
 
 ### POST /login
-```sh
+```shell
 curl --location --request POST 'localhost:8888/login' \
 --form 'email=test@sample.com' \
 --form 'password=test12345'
