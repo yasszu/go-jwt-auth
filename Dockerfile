@@ -1,10 +1,10 @@
-FROM golang:1.17
+FROM golang:1.18
 
 WORKDIR /go/src/app
 
 RUN apt-get update
 
-RUN go get -u github.com/cosmtrek/air
+RUN go install github.com/cosmtrek/air@latest
 
 EXPOSE 8888
 
