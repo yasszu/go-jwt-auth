@@ -41,6 +41,14 @@ func TestAccountRepository_GetAccountByEmail(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "not_found_user",
+			args: args{
+				email: "user2@example.com",
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
