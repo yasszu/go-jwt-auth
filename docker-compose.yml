@@ -12,6 +12,14 @@ services:
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
 
+  postgres_test:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gojwtauth
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+
   server:
     build: .
     environment:

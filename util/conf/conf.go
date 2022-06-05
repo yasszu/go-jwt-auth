@@ -35,7 +35,7 @@ type server struct {
 	Host string
 }
 
-func (s server) Addr() string {
+func (s *server) Addr() string {
 	return fmt.Sprintf("%s:%s", s.Host, s.Port)
 }
 
@@ -47,9 +47,22 @@ type postgres struct {
 	DB       string
 }
 
-func (p postgres) DSN() string {
+func (p *postgres) DSN() string {
 	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 		p.Host,
+		p.Port,
+		p.Username,
+		p.DB,
+		p.Password)
+}
+
+func (p *postgres) TestHost() string {
+	return fmt.Sprintf("%s_test", p.Host)
+}
+
+func (p *postgres) TestDSN() string {
+	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
+		p.TestHost(),
 		p.Port,
 		p.Username,
 		p.DB,
@@ -60,6 +73,6 @@ type jWT struct {
 	Secret string
 }
 
-func (j jWT) SigningKey() []byte {
+func (j *jWT) SigningKey() []byte {
 	return []byte(j.Secret)
 }
