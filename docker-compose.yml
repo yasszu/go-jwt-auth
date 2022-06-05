@@ -3,9 +3,10 @@ version: '3.9'
 services:
 
   postgres:
-    image: postgres
+    image: postgres:14
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: gojwtauth
     ports:
       - "5432:5432"
     volumes:
@@ -20,7 +21,7 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=gojwtauth
       - JWT_ACCESS_TOKEN_SECRET=b5a636fc-bd01-41b1-9780-7bbd906fa4c0
       - JWT_REFRESH_TOKEN_SECRET=Vx_7F6r9WX9iCuoQCPtCbUiv_
     ports:
