@@ -8,11 +8,16 @@ import (
 )
 
 func NewConn() (*gorm.DB, error) {
-	dns := conf.Postgres.DSN()
-	return openDB(dns)
+	dsn := conf.Postgres.DSN()
+	dialector := pg.Open(dsn)
+	cnf := &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	}
+	return gorm.Open(dialector, cnf)
 }
 
-func openDB(dsn string) (*gorm.DB, error) {
+func NewTestConn() (*gorm.DB, error) {
+	dsn := conf.Postgres.TestDSN()
 	dialector := pg.Open(dsn)
 	cnf := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
