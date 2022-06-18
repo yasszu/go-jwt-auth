@@ -10,6 +10,7 @@ import (
 	"github.com/yasszu/go-jwt-auth/util/crypt"
 )
 
+//go:generate mockgen -source=./account.go -destination=./mock/account.go -package=mock
 type AccountUsecase interface {
 	SignUp(ctx context.Context, account *entity.Account) (*entity.AccessToken, error)
 	Login(ctx context.Context, email, password string) (*entity.AccessToken, error)
