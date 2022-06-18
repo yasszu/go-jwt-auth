@@ -1,12 +1,12 @@
-FROM golang:1.16
+FROM golang:1.18
 
 WORKDIR /go/src/app
 
 RUN apt-get update && \
     apt-get -y install postgresql
 
-RUN go get -u github.com/cosmtrek/air && \
-    go get -v github.com/rubenv/sql-migrate/...
+RUN go install github.com/cosmtrek/air@latest && \
+    go install github.com/golang/mock/mockgen@v1.6.0
 
 EXPOSE 8888
 

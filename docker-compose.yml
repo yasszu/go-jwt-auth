@@ -35,3 +35,6 @@ services:
       - "8888:8888"
     volumes:
       - .:/go/src/app
+    depends_on:
+      - postgres
+      - postgres_test

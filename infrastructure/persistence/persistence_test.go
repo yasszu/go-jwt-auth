@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -34,7 +35,7 @@ func prepare(t *testing.T, fn func()) {
 
 	for _, table := range tables {
 		if err := truncate(table); err != nil {
-			t.Log(err)
+			t.Error(err)
 		}
 	}
 
@@ -57,8 +58,10 @@ WHERE schemaname != 'pg_catalog'
 }
 
 func truncate(table string) error {
-	if err := db.Exec("TRUNCATE TABLE ? RESTART IDENTITY CASCADE", table).Error; err != nil {
+	q := fmt.Sprintf("TRUNCATE %s RESTART IDENTITY CASCADE", table)
+	if err := db.Exec(q).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
