@@ -3,10 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/yasszu/go-jwt-auth/domain/service"
-
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
+	"github.com/yasszu/go-jwt-auth/domain/service"
 	"github.com/yasszu/go-jwt-auth/interfaces/middleware"
 	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
