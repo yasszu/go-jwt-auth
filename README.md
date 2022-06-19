@@ -1,11 +1,10 @@
-# JWT Server with gorilla/mux
-https://github.com/gorilla/mux 
+# JWT Server with [gorilla/mux](https://github.com/gorilla/mux)
 
 ## Getting Started
 ### Run Server
 1. Run containers
     ```
-    $ docker-compose up
+    make run
     ```
 
 ## API
@@ -28,5 +27,5 @@ curl --location --request POST 'localhost:8888/login' \
 ### POST /v1/me
 ```sh
 curl --location --request GET 'localhost:8888/v1/me' \
---header 'Authorization: Bearer {your_jwt_token}'
+--header "Authorization: Bearer $JWT_TOKEN"
 ```

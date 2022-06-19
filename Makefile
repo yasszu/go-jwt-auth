@@ -13,3 +13,7 @@ lint:
 .PHONY: test
 test:
 	docker compose exec server go test ./... -count=1
+
+.PHONY: generate
+generate:
+	docker compose exec server go generate ./...

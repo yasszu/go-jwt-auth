@@ -1,25 +1,43 @@
 package usecase
 
-type UnexpectedError struct {
-	Err error
+func newUnexpectedError() *ErrorUnexpected {
+	return &ErrorUnexpected{
+		Message: "unexpected error",
+	}
 }
 
-func (e *UnexpectedError) Error() string {
-	return e.Err.Error()
+type ErrorUnexpected struct {
+	Message string
 }
 
-type NotFoundError struct {
-	Name string
+func (e *ErrorUnexpected) Error() string {
+	return e.Message
 }
 
-func (e *NotFoundError) Error() string {
-	return "not found " + e.Name
+func newNotFoundError() *ErrorNotFound {
+	return &ErrorNotFound{
+		Message: "not found resource",
+	}
 }
 
-type UnauthorizedError struct {
+type ErrorNotFound struct {
+	Message string
+}
+
+func (e *ErrorNotFound) Error() string {
+	return e.Message
+}
+
+func newErrorUnauthorized() *ErrorUnauthorized {
+	return &ErrorUnauthorized{
+		Massage: "unauthorized",
+	}
+}
+
+type ErrorUnauthorized struct {
 	Massage string
 }
 
-func (e *UnauthorizedError) Error() string {
+func (e *ErrorUnauthorized) Error() string {
 	return e.Massage
 }

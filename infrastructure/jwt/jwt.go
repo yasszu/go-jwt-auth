@@ -5,6 +5,7 @@ import (
 	"time"
 
 	jwtgo "github.com/dgrijalva/jwt-go"
+	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/util/conf"
 )
@@ -19,10 +20,11 @@ type CustomClaims struct {
 }
 
 func Sign(account *entity.Account) (*entity.AccessToken, error) {
-	expiredAt := time.Now().Add(time.Hour * expireTime)
+	now := time.Now()
+	expiresAt := now.Add(expireTime)
 	claims := &CustomClaims{
 		AccountID:      account.ID,
-		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiredAt.Unix()},
+		StandardClaims: jwtgo.StandardClaims{ExpiresAt: expiresAt.Unix()},
 	}
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
 
@@ -34,7 +36,7 @@ func Sign(account *entity.Account) (*entity.AccessToken, error) {
 	accessToken := &entity.AccessToken{
 		AccountID: account.ID,
 		Token:     signedString,
-		ExpiresAt: expiredAt,
+		ExpiresAt: expiresAt,
 	}
 	return accessToken, nil
 }
@@ -48,6 +50,7 @@ func ValidateToken(signedToken string) (*CustomClaims, error) {
 		},
 	)
 	if err != nil {
+		log.Error(err)
 		return nil, fmt.Errorf("%v: %w", ErrorParseClaims, err)
 	}
 
