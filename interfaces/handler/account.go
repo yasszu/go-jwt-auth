@@ -5,6 +5,7 @@ import (
 
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
+	"github.com/yasszu/go-jwt-auth/domain/service"
 	"github.com/yasszu/go-jwt-auth/interfaces/middleware"
 	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
 	"github.com/yasszu/go-jwt-auth/interfaces/response"
@@ -14,9 +15,9 @@ type AccountHandler struct {
 	accountUsecase usecase.AccountUsecase
 }
 
-func NewAccountHandler(accountRepository repository.AccountRepository) *AccountHandler {
+func NewAccountHandler(accountRepository repository.Account, jwtService service.Jwt) *AccountHandler {
 	return &AccountHandler{
-		accountUsecase: usecase.NewAccountUsecase(accountRepository),
+		accountUsecase: usecase.NewAccountUsecase(accountRepository, jwtService),
 	}
 }
 

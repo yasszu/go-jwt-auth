@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
-	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
+	"github.com/yasszu/go-jwt-auth/domain/service"
 	"github.com/yasszu/go-jwt-auth/util/crypt"
 )
 
@@ -18,12 +18,14 @@ type AccountUsecase interface {
 }
 
 type accountUsecase struct {
-	accountRepository repository.AccountRepository
+	accountRepository repository.Account
+	jwtService        service.Jwt
 }
 
-func NewAccountUsecase(accountRepository repository.AccountRepository) AccountUsecase {
+func NewAccountUsecase(accountRepository repository.Account, jwtService service.Jwt) AccountUsecase {
 	return &accountUsecase{
 		accountRepository: accountRepository,
+		jwtService:        jwtService,
 	}
 }
 
@@ -33,7 +35,7 @@ func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*en
 		return nil, newUnexpectedError()
 	}
 
-	token, err := jwt.Sign(account)
+	token, err := u.jwtService.Sign(account)
 	if err != nil {
 		log.Error(err)
 		return nil, newUnexpectedError()
@@ -54,7 +56,7 @@ func (u *accountUsecase) Login(_ context.Context, email, password string) (*enti
 		return nil, newErrorUnauthorized()
 	}
 
-	token, err := jwt.Sign(account)
+	token, err := u.jwtService.Sign(account)
 	if err != nil {
 		log.Error(err)
 		return nil, newUnexpectedError()
