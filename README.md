@@ -6,6 +6,10 @@
     ```
     make run
     ```
+2. Run tests
+    ```
+    make test
+    ```
 
 ## API
 ### POST /signup
