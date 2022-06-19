@@ -28,7 +28,6 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		Email:    r.FormValue("email"),
 		Password: r.FormValue("password"),
 	}
-
 	if err := f.Validate(); err != nil {
 		presenter.NewBadRequest(w)
 		return
@@ -51,10 +50,16 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 
 // Login POST /login
 func (h *AuthenticationHandler) Login(w http.ResponseWriter, r *http.Request) {
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+	f := form.Login{
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
+	}
+	if err := f.Validate(); err != nil {
+		presenter.NewBadRequest(w)
+		return
+	}
 
-	token, err := h.accountUsecase.Login(r.Context(), email, password)
+	token, err := h.accountUsecase.Login(r.Context(), f.Email, f.Password)
 	if err != nil {
 		presenter.NewError(w, err)
 		return

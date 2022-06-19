@@ -13,13 +13,15 @@ type Signup struct {
 	Password string `form:"password" validate:"required,min=6,max=64"`
 }
 
-func (f Signup) Validate() error {
+func (f *Signup) Validate() error {
 	validate := _validate.New()
-	err := validate.Struct(f)
-	return err
+	if err := validate.Struct(f); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (f Signup) Entity() (entity.Account, error) {
+func (f *Signup) Entity() (entity.Account, error) {
 	hash, err := crypt.GenerateBCryptoHash(f.Password)
 	if err != nil {
 		return entity.Account{}, err
@@ -30,4 +32,17 @@ func (f Signup) Entity() (entity.Account, error) {
 		Email:        f.Email,
 		PasswordHash: hash,
 	}, nil
+}
+
+type Login struct {
+	Email    string `form:"email" validate:"required,email"`
+	Password string `form:"password" validate:"required,min=6,max=64"`
+}
+
+func (f *Login) Validate() error {
+	validate := _validate.New()
+	if err := validate.Struct(f); err != nil {
+		return err
+	}
+	return nil
 }
