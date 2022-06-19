@@ -29,9 +29,9 @@ func OK(w http.ResponseWriter) {
 }
 
 var (
-	errUnexpected   *usecase.UnexpectedError
-	errNotFound     *usecase.NotFoundError
-	errUnauthorized *usecase.UnauthorizedError
+	errUnexpected   *usecase.ErrorUnexpected
+	errNotFound     *usecase.ErrorNotFound
+	errUnauthorized *usecase.ErrorUnauthorized
 )
 
 func Status(err error) int {
