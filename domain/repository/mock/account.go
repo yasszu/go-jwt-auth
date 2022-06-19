@@ -11,31 +11,31 @@ import (
 	entity "github.com/yasszu/go-jwt-auth/domain/entity"
 )
 
-// MockAccountRepository is a mock of AccountRepository interface.
-type MockAccountRepository struct {
+// MockAccount is a mock of Account interface.
+type MockAccount struct {
 	ctrl     *gomock.Controller
-	recorder *MockAccountRepositoryMockRecorder
+	recorder *MockAccountMockRecorder
 }
 
-// MockAccountRepositoryMockRecorder is the mock recorder for MockAccountRepository.
-type MockAccountRepositoryMockRecorder struct {
-	mock *MockAccountRepository
+// MockAccountMockRecorder is the mock recorder for MockAccount.
+type MockAccountMockRecorder struct {
+	mock *MockAccount
 }
 
-// NewMockAccountRepository creates a new mock instance.
-func NewMockAccountRepository(ctrl *gomock.Controller) *MockAccountRepository {
-	mock := &MockAccountRepository{ctrl: ctrl}
-	mock.recorder = &MockAccountRepositoryMockRecorder{mock}
+// NewMockAccount creates a new mock instance.
+func NewMockAccount(ctrl *gomock.Controller) *MockAccount {
+	mock := &MockAccount{ctrl: ctrl}
+	mock.recorder = &MockAccountMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockAccountRepository) EXPECT() *MockAccountRepositoryMockRecorder {
+func (m *MockAccount) EXPECT() *MockAccountMockRecorder {
 	return m.recorder
 }
 
 // CreateAccount mocks base method.
-func (m *MockAccountRepository) CreateAccount(account *entity.Account) error {
+func (m *MockAccount) CreateAccount(account *entity.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", account)
 	ret0, _ := ret[0].(error)
@@ -43,13 +43,13 @@ func (m *MockAccountRepository) CreateAccount(account *entity.Account) error {
 }
 
 // CreateAccount indicates an expected call of CreateAccount.
-func (mr *MockAccountRepositoryMockRecorder) CreateAccount(account interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) CreateAccount(account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockAccountRepository)(nil).CreateAccount), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockAccount)(nil).CreateAccount), account)
 }
 
 // DeleteAccount mocks base method.
-func (m *MockAccountRepository) DeleteAccount(accountID uint) error {
+func (m *MockAccount) DeleteAccount(accountID uint) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAccount", accountID)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockAccountRepository) DeleteAccount(accountID uint) error {
 }
 
 // DeleteAccount indicates an expected call of DeleteAccount.
-func (mr *MockAccountRepositoryMockRecorder) DeleteAccount(accountID interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) DeleteAccount(accountID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockAccountRepository)(nil).DeleteAccount), accountID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockAccount)(nil).DeleteAccount), accountID)
 }
 
 // GetAccountByEmail mocks base method.
-func (m *MockAccountRepository) GetAccountByEmail(email string) (*entity.Account, error) {
+func (m *MockAccount) GetAccountByEmail(email string) (*entity.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccountByEmail", email)
 	ret0, _ := ret[0].(*entity.Account)
@@ -72,13 +72,13 @@ func (m *MockAccountRepository) GetAccountByEmail(email string) (*entity.Account
 }
 
 // GetAccountByEmail indicates an expected call of GetAccountByEmail.
-func (mr *MockAccountRepositoryMockRecorder) GetAccountByEmail(email interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) GetAccountByEmail(email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByEmail", reflect.TypeOf((*MockAccountRepository)(nil).GetAccountByEmail), email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByEmail", reflect.TypeOf((*MockAccount)(nil).GetAccountByEmail), email)
 }
 
 // GetAccountByID mocks base method.
-func (m *MockAccountRepository) GetAccountByID(accountID uint) (*entity.Account, error) {
+func (m *MockAccount) GetAccountByID(accountID uint) (*entity.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccountByID", accountID)
 	ret0, _ := ret[0].(*entity.Account)
@@ -87,13 +87,13 @@ func (m *MockAccountRepository) GetAccountByID(accountID uint) (*entity.Account,
 }
 
 // GetAccountByID indicates an expected call of GetAccountByID.
-func (mr *MockAccountRepositoryMockRecorder) GetAccountByID(accountID interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) GetAccountByID(accountID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByID", reflect.TypeOf((*MockAccountRepository)(nil).GetAccountByID), accountID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByID", reflect.TypeOf((*MockAccount)(nil).GetAccountByID), accountID)
 }
 
 // UpdateAccount mocks base method.
-func (m *MockAccountRepository) UpdateAccount(account *entity.Account) error {
+func (m *MockAccount) UpdateAccount(account *entity.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAccount", account)
 	ret0, _ := ret[0].(error)
@@ -101,7 +101,7 @@ func (m *MockAccountRepository) UpdateAccount(account *entity.Account) error {
 }
 
 // UpdateAccount indicates an expected call of UpdateAccount.
-func (mr *MockAccountRepositoryMockRecorder) UpdateAccount(account interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) UpdateAccount(account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockAccountRepository)(nil).UpdateAccount), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockAccount)(nil).UpdateAccount), account)
 }

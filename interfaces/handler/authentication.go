@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/yasszu/go-jwt-auth/domain/service"
+
 	"github.com/yasszu/go-jwt-auth/application/usecase"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/interfaces/form"
@@ -14,9 +16,9 @@ type AuthenticationHandler struct {
 	accountUsecase usecase.AccountUsecase
 }
 
-func NewAuthenticationHandler(accountRepository repository.AccountRepository) *AuthenticationHandler {
+func NewAuthenticationHandler(accountRepository repository.Account, jwtService service.Jwt) *AuthenticationHandler {
 	return &AuthenticationHandler{
-		accountUsecase: usecase.NewAccountUsecase(accountRepository),
+		accountUsecase: usecase.NewAccountUsecase(accountRepository, jwtService),
 	}
 }
 

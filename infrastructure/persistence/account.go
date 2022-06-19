@@ -14,7 +14,7 @@ func NewAccountRepository(db *gorm.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }
 
-var _ repository.AccountRepository = (*AccountRepository)(nil)
+var _ repository.Account = (*AccountRepository)(nil)
 
 func (r *AccountRepository) GetAccountByEmail(email string) (*entity.Account, error) {
 	var account entity.Account
