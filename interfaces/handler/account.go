@@ -24,13 +24,13 @@ func NewAccountHandler(accountRepository repository.AccountRepository) *AccountH
 func (h *AccountHandler) Me(w http.ResponseWriter, r *http.Request) {
 	accountID, ok := middleware.GetAccountID(r.Context())
 	if !ok {
-		presenter.Error(w, http.StatusUnauthorized, "Unauthorized")
+		presenter.NewUnauthorized(w)
 		return
 	}
 
 	account, err := h.accountUsecase.Me(r.Context(), accountID)
 	if err != nil {
-		presenter.Error(w, presenter.Status(err), err)
+		presenter.NewError(w, err)
 		return
 	}
 

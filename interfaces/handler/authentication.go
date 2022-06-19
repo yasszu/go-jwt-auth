@@ -29,19 +29,19 @@ func (h *AuthenticationHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := f.Validate(); err != nil {
-		presenter.Error(w, presenter.Status(err), err)
+		presenter.NewBadRequest(w)
 		return
 	}
 
 	account, err := f.Entity()
 	if err != nil {
-		presenter.Error(w, presenter.Status(err), err)
+		presenter.NewBadRequest(w)
 		return
 	}
 
 	token, err := h.accountUsecase.SignUp(r.Context(), &account)
 	if err != nil {
-		presenter.Error(w, presenter.Status(err), err)
+		presenter.NewError(w, err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func (h *AuthenticationHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.accountUsecase.Login(r.Context(), email, password)
 	if err != nil {
-		presenter.Error(w, presenter.Status(err), err)
+		presenter.NewError(w, err)
 		return
 	}
 

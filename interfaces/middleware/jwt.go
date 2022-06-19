@@ -13,14 +13,14 @@ func JWT(next http.Handler) http.Handler {
 		authHeader := r.Header.Get("Authorization")
 		extractedToken := strings.Split(authHeader, "Bearer ")
 		if len(extractedToken) != 2 {
-			presenter.Error(w, http.StatusForbidden, "Forbidden")
+			presenter.Error(w, http.StatusForbidden, "Invalid header")
 			return
 		}
 
 		token := strings.TrimSpace(extractedToken[1])
 		claims, err := jwt.ValidateToken(token)
 		if err != nil {
-			presenter.Error(w, http.StatusForbidden, "Forbidden")
+			presenter.Error(w, http.StatusForbidden, "Invalid token")
 			return
 		}
 

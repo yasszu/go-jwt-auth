@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/yasszu/go-jwt-auth/interfaces/presenter"
-
 	"gorm.io/gorm"
 )
 
@@ -30,7 +29,7 @@ func (h *IndexHandler) Healthy(w http.ResponseWriter, _ *http.Request) {
 func (h *IndexHandler) Ready(w http.ResponseWriter, _ *http.Request) {
 	var i int
 	if err := h.db.Raw("SELECT 1").Scan(&i).Error; err != nil {
-		presenter.Error(w, http.StatusInternalServerError, err)
+		presenter.NewInternalServerError(w)
 		return
 	}
 	presenter.OK(w)
