@@ -29,8 +29,8 @@ func NewAccountUsecase(accountRepository repository.Account, jwtService service.
 	}
 }
 
-func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*entity.AccessToken, error) {
-	if err := u.accountRepository.CreateAccount(account); err != nil {
+func (u *accountUsecase) SignUp(ctx context.Context, account *entity.Account) (*entity.AccessToken, error) {
+	if err := u.accountRepository.CreateAccount(ctx, account); err != nil {
 		log.Error(err)
 		return nil, newUnexpectedError()
 	}
@@ -44,8 +44,8 @@ func (u *accountUsecase) SignUp(_ context.Context, account *entity.Account) (*en
 	return token, nil
 }
 
-func (u *accountUsecase) Login(_ context.Context, email, password string) (*entity.AccessToken, error) {
-	account, err := u.accountRepository.GetAccountByEmail(email)
+func (u *accountUsecase) Login(ctx context.Context, email, password string) (*entity.AccessToken, error) {
+	account, err := u.accountRepository.GetAccountByEmail(ctx, email)
 	if err != nil {
 		log.Error(err)
 		return nil, newUnexpectedError()
@@ -65,8 +65,8 @@ func (u *accountUsecase) Login(_ context.Context, email, password string) (*enti
 	return token, nil
 }
 
-func (u *accountUsecase) Me(_ context.Context, accountID uint) (*entity.Account, error) {
-	account, err := u.accountRepository.GetAccountByID(accountID)
+func (u *accountUsecase) Me(ctx context.Context, accountID uint) (*entity.Account, error) {
+	account, err := u.accountRepository.GetAccountByID(ctx, accountID)
 	if err != nil {
 		log.Error(err)
 		return nil, newUnexpectedError()

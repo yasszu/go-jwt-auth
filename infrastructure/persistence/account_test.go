@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
@@ -53,7 +54,7 @@ func TestAccountRepository_GetAccountByEmail(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &AccountRepository{db: db}
-			got, err := r.GetAccountByEmail(tt.args.email)
+			got, err := r.GetAccountByEmail(context.Background(), tt.args.email)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetAccountByEmail() error = %v, wantErr %v", err, tt.wantErr)
 				return
