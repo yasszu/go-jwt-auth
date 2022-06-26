@@ -33,6 +33,9 @@ func (r *AccountRepository) GetAccountByEmail(ctx context.Context, email string)
 func (r *AccountRepository) GetAccountByID(ctx context.Context, id uint) (*entity.Account, error) {
 	var account entity.Account
 	if err := r.db.WithContext(ctx).First(&account, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &account, nil

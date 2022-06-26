@@ -74,6 +74,9 @@ func (u *accountUsecase) Me(ctx context.Context, accountID uint) (*entity.Accoun
 		log.Error(err)
 		return nil, newUnexpectedError()
 	}
+	if account == nil {
+		return nil, newNotFoundError()
+	}
 
 	return account, nil
 }
