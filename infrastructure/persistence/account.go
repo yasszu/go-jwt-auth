@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"errors"
 
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
@@ -20,10 +21,10 @@ var _ repository.Account = (*AccountRepository)(nil)
 
 func (r *AccountRepository) GetAccountByEmail(ctx context.Context, email string) (*entity.Account, error) {
 	var account entity.Account
-	if err := r.db.WithContext(ctx).
-		Where("email = ?", email).
-		First(&account).
-		Error; err != nil {
+	if err := r.db.WithContext(ctx).Where("email = ?", email).First(&account).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &account, nil

@@ -50,6 +50,9 @@ func (u *accountUsecase) Login(ctx context.Context, email, password string) (*en
 		log.Error(err)
 		return nil, newUnexpectedError()
 	}
+	if account == nil {
+		return nil, newNotFoundError()
+	}
 
 	if err = crypt.ComparePassword(account.PasswordHash, password); err != nil {
 		log.Error(err)

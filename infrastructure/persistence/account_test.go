@@ -48,7 +48,7 @@ func TestAccountRepository_GetAccountByEmail(t *testing.T) {
 				email: "user2@example.com",
 			},
 			want:    nil,
-			wantErr: true,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
