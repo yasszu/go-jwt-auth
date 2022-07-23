@@ -1,5 +1,3 @@
-\c gojwtauth
-
 CREATE TABLE accounts
 (
     id            SERIAL PRIMARY KEY,
