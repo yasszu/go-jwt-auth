@@ -59,7 +59,7 @@ WHERE schemaname != 'pg_catalog'
 }
 
 func truncate(t *testing.T, table string) error {
-	t.Log(table)
+	t.Logf("TABLE: %s", table)
 
 	q := fmt.Sprintf("TRUNCATE %s RESTART IDENTITY CASCADE", table)
 	if err := db.Exec(q).Error; err != nil {
