@@ -14,11 +14,10 @@ jobs:
         image: postgres:14
         env:
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: gojwtauth
         ports:
           - 5432:5432
         volumes:
-          - ${{ github.workspace }}/initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
+          - ${{ github.workspace }}/initdb:/docker-entrypoint-initdb.d
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -42,5 +41,5 @@ jobs:
           POSTGRES_TEST_PORT: 5432
           POSTGRES_TEST_USER: postgres
           POSTGRES_TEST_PASSWORD: password
-          POSTGRES_TEST_DB: gojwtauth
+          POSTGRES_TEST_DB: postgres
           JWT_SECRET: b5a636fc-bd01-41b1-9780-7bbd906fa4c0
