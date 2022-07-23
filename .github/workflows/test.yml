@@ -10,11 +10,41 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: gojwtauth
+        ports:
+          - 5432:5432
+        volumes:
+          - ${{ github.workspace }}/initdb:/docker-entrypoint-initdb.d
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run containers
-        run: make run
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+          check-latest: true
+          cache: true
+          cache-dependency-path: ./go.sum
 
       - name: Run test
-        run: make test
+        run: go test ./...
+        env:
+          SERVER_HOST: 0.0.0.0
+          SERVER_PORT: 8000
+          POSTGRES_TEST_HOST: localhost
+          POSTGRES_TEST_PORT: 5432
+          POSTGRES_TEST_USER: postgres
+          POSTGRES_TEST_PASSWORD: password
+          POSTGRES_TEST_DB: gojwtauth
+          JWT_SECRET: b5a636fc-bd01-41b1-9780-7bbd906fa4c0
