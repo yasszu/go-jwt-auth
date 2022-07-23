@@ -29,9 +29,9 @@ func init() {
 	PostgresTest = &postgres{
 		Host:     v.PostgresTestHost.String(),
 		Port:     v.PostgresTestPort.Int(),
-		Username: v.PostgresUser.String(),
-		Password: v.PostgresPassword.String(),
-		DB:       v.PostgresDB.String(),
+		Username: v.PostgresTestUser.String(),
+		Password: v.PostgresTestPassword.String(),
+		DB:       v.PostgresTestDB.String(),
 	}
 	JWT = &jWT{
 		Secret: v.JWTSecret.String(),

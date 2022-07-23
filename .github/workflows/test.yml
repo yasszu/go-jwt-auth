@@ -38,11 +38,6 @@ jobs:
         env:
           SERVER_HOST: 0.0.0.0
           SERVER_PORT: 8000
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: gojwtauth
           POSTGRES_TEST_HOST: localhost
           POSTGRES_TEST_PORT: 5432
           POSTGRES_TEST_USER: postgres
