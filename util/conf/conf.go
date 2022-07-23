@@ -7,9 +7,10 @@ import (
 )
 
 var (
-	Server   *server
-	Postgres *postgres
-	JWT      *jWT
+	Server       *server
+	Postgres     *postgres
+	PostgresTest *postgres
+	JWT          *jWT
 )
 
 func init() {
@@ -21,6 +22,13 @@ func init() {
 	Postgres = &postgres{
 		Host:     v.PostgresHost.String(),
 		Port:     v.PostgresPort.Int(),
+		Username: v.PostgresUser.String(),
+		Password: v.PostgresPassword.String(),
+		DB:       v.PostgresDB.String(),
+	}
+	PostgresTest = &postgres{
+		Host:     v.PostgresTestHost.String(),
+		Port:     v.PostgresTestPort.Int(),
 		Username: v.PostgresUser.String(),
 		Password: v.PostgresPassword.String(),
 		DB:       v.PostgresDB.String(),
@@ -50,19 +58,6 @@ type postgres struct {
 func (p *postgres) DSN() string {
 	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 		p.Host,
-		p.Port,
-		p.Username,
-		p.DB,
-		p.Password)
-}
-
-func (p *postgres) TestHost() string {
-	return fmt.Sprintf("%s_test", p.Host)
-}
-
-func (p *postgres) TestDSN() string {
-	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
-		p.TestHost(),
 		p.Port,
 		p.Username,
 		p.DB,

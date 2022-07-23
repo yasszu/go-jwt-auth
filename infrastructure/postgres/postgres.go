@@ -17,7 +17,7 @@ func NewConn() (*gorm.DB, error) {
 }
 
 func NewTestConn() (*gorm.DB, error) {
-	dsn := conf.Postgres.TestDSN()
+	dsn := conf.PostgresTest.DSN()
 	dialector := pg.Open(dsn)
 	cnf := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),

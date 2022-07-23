@@ -30,6 +30,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=gojwtauth
+      - POSTGRES_TEST_HOST=postgres_test
+      - POSTGRES_TEST_PORT=5432
+      - POSTGRES_TEST_USER=postgres
+      - POSTGRES_TEST_PASSWORD=password
+      - POSTGRES_TEST_DB=gojwtauth
       - JWT_SECRET=b5a636fc-bd01-41b1-9780-7bbd906fa4c0
     ports:
       - "8888:8888"
