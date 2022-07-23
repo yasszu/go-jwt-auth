@@ -28,13 +28,13 @@ func TestMain(m *testing.M) {
 }
 
 func prepare(t *testing.T, fn func()) {
-	tables, err := getTables()
+	tables, err := getTables(t)
 	if err != nil {
 		t.Error(err)
 	}
 
 	for _, table := range tables {
-		if err := truncate(table); err != nil {
+		if err := truncate(t, table); err != nil {
 			t.Error(err)
 		}
 	}
@@ -42,7 +42,7 @@ func prepare(t *testing.T, fn func()) {
 	fn()
 }
 
-func getTables() ([]string, error) {
+func getTables(t *testing.T) ([]string, error) {
 	var tables []string
 	q := `
 SELECT tablename
@@ -51,13 +51,17 @@ WHERE schemaname != 'pg_catalog'
   AND schemaname != 'information_schema'
 `
 	if err := db.Raw(q).Scan(&tables).Error; err != nil {
+		t.Error(err)
 		return nil, err
 	}
+	t.Logf("TABLES: %v", tables)
 
 	return tables, nil
 }
 
-func truncate(table string) error {
+func truncate(t *testing.T, table string) error {
+	t.Logf("TRUNCATE TABLE: %s", table)
+
 	q := fmt.Sprintf("TRUNCATE %s RESTART IDENTITY CASCADE", table)
 	if err := db.Exec(q).Error; err != nil {
 		return err
