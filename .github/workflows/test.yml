@@ -10,22 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: gojwtauth
-        ports:
-          - 5432:5432
-        volumes:
-          - ${{ github.workspace }}/initdb:/docker-entrypoint-initdb.d
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - uses: actions/checkout@v3
 
@@ -37,7 +21,17 @@ jobs:
           cache: true
           cache-dependency-path: ./go.sum
 
-      - name: Run test
+      - name: Run Postgres
+        run: |
+          docker run --rm -d \
+          --name postgres_test \
+          -p 5432:5432 \
+          -e POSTGRES_PASSWORD=password \
+          -e POSTGRES_DB=gojwtauth \
+          -v ${{ github.workspace }}/initdb:/docker-entrypoint-initdb.d \
+          postgres
+
+      - name: Run Test
         run: go test ./...
         env:
           SERVER_HOST: 0.0.0.0
