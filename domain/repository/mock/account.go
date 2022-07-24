@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,73 +36,73 @@ func (m *MockAccount) EXPECT() *MockAccountMockRecorder {
 }
 
 // CreateAccount mocks base method.
-func (m *MockAccount) CreateAccount(account *entity.Account) error {
+func (m *MockAccount) CreateAccount(ctx context.Context, account *entity.Account) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccount", account)
+	ret := m.ctrl.Call(m, "CreateAccount", ctx, account)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateAccount indicates an expected call of CreateAccount.
-func (mr *MockAccountMockRecorder) CreateAccount(account interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) CreateAccount(ctx, account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockAccount)(nil).CreateAccount), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockAccount)(nil).CreateAccount), ctx, account)
 }
 
 // DeleteAccount mocks base method.
-func (m *MockAccount) DeleteAccount(accountID uint) error {
+func (m *MockAccount) DeleteAccount(ctx context.Context, accountID uint) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAccount", accountID)
+	ret := m.ctrl.Call(m, "DeleteAccount", ctx, accountID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteAccount indicates an expected call of DeleteAccount.
-func (mr *MockAccountMockRecorder) DeleteAccount(accountID interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) DeleteAccount(ctx, accountID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockAccount)(nil).DeleteAccount), accountID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockAccount)(nil).DeleteAccount), ctx, accountID)
 }
 
 // GetAccountByEmail mocks base method.
-func (m *MockAccount) GetAccountByEmail(email string) (*entity.Account, error) {
+func (m *MockAccount) GetAccountByEmail(ctx context.Context, email string) (*entity.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAccountByEmail", email)
+	ret := m.ctrl.Call(m, "GetAccountByEmail", ctx, email)
 	ret0, _ := ret[0].(*entity.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAccountByEmail indicates an expected call of GetAccountByEmail.
-func (mr *MockAccountMockRecorder) GetAccountByEmail(email interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) GetAccountByEmail(ctx, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByEmail", reflect.TypeOf((*MockAccount)(nil).GetAccountByEmail), email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByEmail", reflect.TypeOf((*MockAccount)(nil).GetAccountByEmail), ctx, email)
 }
 
 // GetAccountByID mocks base method.
-func (m *MockAccount) GetAccountByID(accountID uint) (*entity.Account, error) {
+func (m *MockAccount) GetAccountByID(ctx context.Context, accountID uint) (*entity.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAccountByID", accountID)
+	ret := m.ctrl.Call(m, "GetAccountByID", ctx, accountID)
 	ret0, _ := ret[0].(*entity.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAccountByID indicates an expected call of GetAccountByID.
-func (mr *MockAccountMockRecorder) GetAccountByID(accountID interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) GetAccountByID(ctx, accountID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByID", reflect.TypeOf((*MockAccount)(nil).GetAccountByID), accountID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByID", reflect.TypeOf((*MockAccount)(nil).GetAccountByID), ctx, accountID)
 }
 
 // UpdateAccount mocks base method.
-func (m *MockAccount) UpdateAccount(account *entity.Account) error {
+func (m *MockAccount) UpdateAccount(ctx context.Context, account *entity.Account) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAccount", account)
+	ret := m.ctrl.Call(m, "UpdateAccount", ctx, account)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateAccount indicates an expected call of UpdateAccount.
-func (mr *MockAccountMockRecorder) UpdateAccount(account interface{}) *gomock.Call {
+func (mr *MockAccountMockRecorder) UpdateAccount(ctx, account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockAccount)(nil).UpdateAccount), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockAccount)(nil).UpdateAccount), ctx, account)
 }
