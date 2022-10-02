@@ -11,10 +11,10 @@ import (
 
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
 	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
+	"github.com/yasszu/go-jwt-auth/util/postgres"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/yasszu/go-jwt-auth/infrastructure/postgres"
 	"github.com/yasszu/go-jwt-auth/interfaces/handler"
 	"github.com/yasszu/go-jwt-auth/util/conf"
 )
