@@ -7,7 +7,7 @@ import (
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/domain/repository"
 	"github.com/yasszu/go-jwt-auth/domain/service"
-	"github.com/yasszu/go-jwt-auth/util/crypt"
+	"github.com/yasszu/go-jwt-auth/pkg/crypt"
 )
 
 //go:generate mockgen -source=./account.go -destination=./mock/account.go -package=mock
