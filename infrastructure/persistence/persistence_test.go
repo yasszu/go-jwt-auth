@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-	"github.com/yasszu/go-jwt-auth/infrastructure/postgres"
+	"github.com/yasszu/go-jwt-auth/pkg/postgres"
 	"gorm.io/gorm"
 )
 

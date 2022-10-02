@@ -3,7 +3,7 @@ package conf
 import (
 	"fmt"
 
-	"github.com/yasszu/go-jwt-auth/util/env"
+	"github.com/yasszu/go-jwt-auth/pkg/env"
 )
 
 var (

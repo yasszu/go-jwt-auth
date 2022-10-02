@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/domain/entity"
 	"github.com/yasszu/go-jwt-auth/domain/service"
-	"github.com/yasszu/go-jwt-auth/util/conf"
+	"github.com/yasszu/go-jwt-auth/pkg/conf"
 )
 
 var (

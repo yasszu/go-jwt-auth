@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"github.com/yasszu/go-jwt-auth/util/conf"
+	"github.com/yasszu/go-jwt-auth/pkg/conf"
 	pg "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

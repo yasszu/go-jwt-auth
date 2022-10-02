@@ -3,7 +3,7 @@ package form
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/yasszu/go-jwt-auth/domain/entity"
-	"github.com/yasszu/go-jwt-auth/util/crypt"
+	"github.com/yasszu/go-jwt-auth/pkg/crypt"
 )
 
 type Signup struct {
