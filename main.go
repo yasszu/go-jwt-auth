@@ -9,12 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yasszu/go-jwt-auth/interfaces/router"
-
 	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
 	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
 	"github.com/yasszu/go-jwt-auth/interfaces/handler"
+	"github.com/yasszu/go-jwt-auth/interfaces/router"
 	"github.com/yasszu/go-jwt-auth/pkg/conf"
 	"github.com/yasszu/go-jwt-auth/pkg/postgres"
 )
