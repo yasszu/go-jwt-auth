@@ -9,7 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/yasszu/go-jwt-auth/interfaces/router"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/yasszu/go-jwt-auth/infrastructure/jwt"
 	"github.com/yasszu/go-jwt-auth/infrastructure/persistence"
@@ -36,8 +37,7 @@ func main() {
 	accountRepository := persistence.NewAccountRepository(conn)
 	jwtService := jwt.NewService()
 	h := handler.NewHandler(conn, accountRepository, jwtService)
-	r := mux.NewRouter()
-	h.Register(r)
+	r := router.NewRouter(h)
 
 	srv := &http.Server{
 		Addr:         conf.Server.Addr(),
