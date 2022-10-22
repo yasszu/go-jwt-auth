@@ -1,4 +1,6 @@
-# JWT Server with [gorilla/mux](https://github.com/gorilla/mux)
+# JWT Server
+## Libraries
+- [gorilla/mux](https://github.com/gorilla/mux)
 
 ## Getting Started
 ### Run Server
